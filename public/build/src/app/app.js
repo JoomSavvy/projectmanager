@@ -10,7 +10,7 @@ angular.module( 'app', [
     'ui.bootstrap',
     'services.user.session'
     ])
-    .constant('appUrl', 'api/v1/')
+    .constant('appUrl', '/api/v1/')
     .config( function config ( $stateProvider, $urlRouterProvider, $httpProvider ) {
         $httpProvider.defaults.useXDomain = true;
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
