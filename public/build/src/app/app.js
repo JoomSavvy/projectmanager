@@ -7,6 +7,7 @@ angular.module( 'app', [
     'angular-loading-bar',
     'ngResource',
     'ui.router',
+    'ui.sortable',
     'ui.bootstrap',
     'services.user.session'
     ])
