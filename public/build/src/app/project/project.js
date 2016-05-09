@@ -27,6 +27,10 @@ angular.module( 'app.project', [
                 projectsRestService:'projectsRestService',
                 projects:function(projectsRestService,$stateParams){
                     return projectsRestService.query().$promise;
+                },
+                usersRestService:'usersRestService',
+                users:function(usersRestService,$stateParams){
+                    return usersRestService.query().$promise;
                 }
             }
         });

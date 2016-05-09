@@ -96,9 +96,10 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
 
 angular.module("project/items/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/items/template.tpl.html",
-    "<table style=\"border-collapse: separate;\">\n" +
+    "<table style=\"border-collapse: separate;border-spacing: 12px;\">\n" +
     "    <thead>\n" +
     "        <tr>\n" +
+    "            <th></th>\n" +
     "            <th>Date</th>\n" +
     "            <th>Project Description</th>\n" +
     "            <th>Task Person</th>\n" +
@@ -108,8 +109,9 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th>Notes</th>\n" +
     "        </tr>\n" +
     "    </thead>\n" +
-    "    <tbody>\n" +
+    "    <tbody ui-sortable=\"sortableOptions\" ng-model=\"Ctrl.list\">\n" +
     "        <tr ng-repeat=\"project in Ctrl.projects\">\n" +
+    "            <td><div class=\"myHandle\" style=\"width:5px;height:5px;background:black;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item\"> {{project.description}}</a></td>\n" +
     "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
@@ -118,8 +120,37 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
     "            <td>{{project.comments[0].comment}}</td>\n" +
     "        </tr>\n" +
+    "\n" +
     "    </tbody>\n" +
     "</table>\n" +
+    "<table ng-if=\"Ctrl.showNewProjectRow\">\n" +
+    "    <thead>\n" +
+    "        <tr>\n" +
+    "            <th>Project Description</th>\n" +
+    "            <th>Task Person</th>\n" +
+    "            <th>Urgency</th>\n" +
+    "            <th>Action Required</th>\n" +
+    "            <th>Action Completed</th>\n" +
+    "            <th>Notes</th>\n" +
+    "        </tr>\n" +
+    "    </thead>\n" +
+    "    <tbody>\n" +
+    "        <tr >\n" +
+    "            <td><input type=\"text\" ng-model=\"Ctrl.newRow.description\"/></td>\n" +
+    "            <td>\n" +
+    "                <select ng-model=\"Ctrl.newRow.assignee\">\n" +
+    "                    <option ng-repeat=\"user in Ctrl.users\" value=\"user.id\">{{user.name}}</option>\n" +
+    "                </select>\n" +
+    "            </td>\n" +
+    "            <td><input type=\"number\"    ng-model=\"Ctrl.newRow.order\"/></td>\n" +
+    "            <td><input type=\"text\"      ng-model=\"Ctrl.newRow.deliverable\"/></td>\n" +
+    "            <td><input type=\"text\"      ng-model=\"Ctrl.newRow.delivered\"/></td>\n" +
+    "            <td><input type=\"text\"      ng-model=\"Ctrl.newRow.comment\"/></td>\n" +
+    "        </tr>\n" +
+    "    </tbody>\n" +
+    "</table>\n" +
+    "<input ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
+    "<input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
     "");
 }]);
 
