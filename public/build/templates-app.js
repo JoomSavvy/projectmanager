@@ -112,9 +112,9 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
 
 angular.module("project/items/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/items/template.tpl.html",
-    "<table style=\"border-collapse: separate;border-spacing: 12px;\">\n" +
+    "<table id=\"project_table\">\n" +
     "    <thead>\n" +
-    "        <tr>\n" +
+    "        <tr style=\"border:1px solid gray;background:lightgrey;\">\n" +
     "            <th></th>\n" +
     "            <th>Date</th>\n" +
     "            <th>Project Description</th>\n" +
@@ -126,7 +126,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </tr>\n" +
     "    </thead>\n" +
     "    <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
-    "        <tr ng-repeat=\"project in Ctrl.projects\">\n" +
+    "        <tr ng-repeat=\"project in Ctrl.projects\" style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "            <td class=\"myHandle\"><div  style=\"width:15px;height:15px;background:black;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.description}}</a></td>\n" +
