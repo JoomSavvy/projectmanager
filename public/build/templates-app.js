@@ -68,17 +68,17 @@ angular.module("login/logout/template.tpl.html", []).run(["$templateCache", func
 angular.module("project/item/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/item/template.tpl.html",
     "<div>\n" +
-    "    <p>Project Description: {{Ctrl.project.description}}</p>\n" +
+    "    <h4>Project Description: {{Ctrl.project.description}}</h4>\n" +
     "    <div>\n" +
     "        <h4>Tasks</h4>\n" +
-    "        <table style=\"border-spacing:12px;border-collapse:separate;\">\n" +
+    "        <table>\n" +
     "            <thead>\n" +
     "            <th>Created On</th>\n" +
     "            <th>Deliverable</th>\n" +
     "            <th>Delivered</th>\n" +
     "            </thead>\n" +
     "            <tbody>\n" +
-    "            <tr ng-if=\"Ctrl.project.tasks.length > 0\" ng-repeat=\"task in Ctrl.project.tasks\">\n" +
+    "            <tr ng-if=\"Ctrl.project.tasks.length > 0\" ng-repeat=\"task in Ctrl.project.tasks\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "                <td>{{task.created_at}}</td>\n" +
     "                <td>{{task.deliverable}}</td>\n" +
     "                <td>{{task.delivered || 'No Progress'}}</td>\n" +
@@ -89,7 +89,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "    </div>\n" +
     "    <div>\n" +
     "        <h4>Notes</h4>\n" +
-    "        <table style=\"border-spacing:12px;border-collapse:separate;\">\n" +
+    "        <table >\n" +
     "            <thead>\n" +
     "            <tr>\n" +
     "                <th>Created On</th>\n" +
@@ -97,7 +97,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "            </tr>\n" +
     "            </thead>\n" +
     "            <tbody>\n" +
-    "            <tr ng-if=\"Ctrl.project.comments.length > 0\" ng-repeat=\"comment in Ctrl.project.comments\">\n" +
+    "            <tr ng-if=\"Ctrl.project.comments.length > 0\" ng-repeat=\"comment in Ctrl.project.comments\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "                <td>{{comment.created_at}}</td>\n" +
     "                <td>{{comment.comment}}</td>\n" +
     "            </tr>\n" +
