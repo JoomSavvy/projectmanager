@@ -3,9 +3,9 @@
  */
 
 angular.module( 'resources.projects',['ngResource'] ).factory('projectsRestService', function ($resource, appUrl) {
-    return $resource(appUrl+'projects/:projectId',
+    return $resource(appUrl+'projects/:id',
         {
-            projectId:'@project_id'
+            id:'@id'
         },
         {
             update:{

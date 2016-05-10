@@ -66,7 +66,7 @@ class ProjectsAPIController extends AppBaseController
     {
         $this->projectsRepository->pushCriteria(new RequestCriteria($request));
         $this->projectsRepository->pushCriteria(new LimitOffsetCriteria($request));
-        $projects = $this->projectsRepository->with(['comments','tasks','tasks.assignee'])->all();
+        $projects = $this->projectsRepository->orderBy('order_by')->with(['comments','tasks','tasks.assignee'])->all();
 
         return $this->sendResponse($projects->toArray(), 'Projects retrieved successfully');
     }

@@ -45,7 +45,8 @@ class Projects extends Model
 
 
     public $fillable = [
-        'description'
+        'description',
+        'order_by'
     ];
 
     /**

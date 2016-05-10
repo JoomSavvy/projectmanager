@@ -14,6 +14,7 @@ angular.module( 'app.project.items', [])
             this.projects = projects;
             this.users = users;
 
+
             this.newProject = {};
             this.newTask = {};
             this.newComment = {};
@@ -25,19 +26,24 @@ angular.module( 'app.project.items', [])
 
             this.sortableOptions = {
                 handle: '> .myHandle',
-                update: function (e, ui) {
-                    var logEntry = tmpList.map(function (i) {
-                        return i.value;
-                    }).join(', ');
-                    this.sortingLog.push('Update: ' + logEntry);
+                update: function(e, ui) {
                 },
-                stop: function (e, ui) {
-                    // this callback has the changed model
-                    var logEntry = tmpList.map(function (i) {
-                        return i.value;
-                    }).join(', ');
-                    this.sortingLog.push('Stop: ' + logEntry);
-                }
+                stop: angular.bind(this,function(e, ui) {
+
+                    console.log(this.list);
+                    angular.forEach(this.projects,function(value,index,projects){
+                        //value.order_by = index;
+                        console.log(index);
+                        if(projects[index].order_by != index+1){
+                            projects[index].order_by = index+1;
+
+                            projectsRestService.update({id:value.id},value);
+                        }
+
+                    },this);
+                    console.log(this.projects);
+
+                })
             };
 
             this.showNewRow = function(){
@@ -45,12 +51,12 @@ angular.module( 'app.project.items', [])
             };
 
             this.saveNewRow = function(){
-                    this.newRow.description //project
-                    this.newRow.assignee //task
-                    this.newRow.order //project
-                    this.newRow.deliverable //task
-                    this.newRow.delivered //task
-                    this.newRow.comment //comment
+                    //this.newRow.description //project
+                    //this.newRow.assignee //task
+                    //this.newRow.order //project
+                    //this.newRow.deliverable //task
+                    //this.newRow.delivered //task
+                    //this.newRow.comment //comment
 
                 //save project, save task with project id, save comment with project id
                 var project = {
@@ -61,7 +67,7 @@ angular.module( 'app.project.items', [])
                 var task = {
                     assigned_to : this.newRow.assignee,
                     deliverable: this.newRow.deliverable,
-                    delivereed: this.newRow.delivered
+                    delivered: this.newRow.delivered
                 };
 
                 var comment = {

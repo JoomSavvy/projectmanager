@@ -36,7 +36,7 @@ angular.module( 'app.project', [
         });
 
         $stateProvider.state( 'project.item', {
-            url: '/project/:projectId',
+            url: '/project/:id',
             views: {
                 "main@": {
                     controller: 'ProjectItemCtrl as Ctrl',
@@ -47,7 +47,7 @@ angular.module( 'app.project', [
             resolve:{
                 projectsRestService:'projectsRestService',
                 project:function(projectsRestService,$stateParams){
-                    return projectsRestService.query({project_id:$stateParams.projectId}).$promise;
+                    return projectsRestService.get({id:$stateParams.id}).$promise;
                 }
             }
         });

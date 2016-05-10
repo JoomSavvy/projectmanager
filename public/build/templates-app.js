@@ -68,27 +68,43 @@ angular.module("login/logout/template.tpl.html", []).run(["$templateCache", func
 angular.module("project/item/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/item/template.tpl.html",
     "<div>\n" +
-    "    <p>Description:{{Ctrl.project.description}}</p>\n" +
+    "    <p>Project Description: {{Ctrl.project.description}}</p>\n" +
     "    <div>\n" +
     "        <h4>Tasks</h4>\n" +
-    "        <table>\n" +
-    "            <tr ng-repeat=\"task in ctrl.project.tasks\">\n" +
-    "               <td>{{task.description}}</td>\n" +
-    "               <td>{{task.priority}}</td>\n" +
-    "               <td>{{task.deliverable}}</td>\n" +
-    "               <td>{{task.delivered || 'No Progress'}}</td>\n" +
+    "        <table style=\"border-spacing:12px;border-collapse:separate;\">\n" +
+    "            <thead>\n" +
+    "            <th>Created On</th>\n" +
+    "            <th>Deliverable</th>\n" +
+    "            <th>Delivered</th>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-if=\"Ctrl.project.tasks.length > 0\" ng-repeat=\"task in Ctrl.project.tasks\">\n" +
+    "                <td>{{task.created_at}}</td>\n" +
+    "                <td>{{task.deliverable}}</td>\n" +
+    "                <td>{{task.delivered || 'No Progress'}}</td>\n" +
     "            </tr>\n" +
+    "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"2\"> No Tasks Associated With This Project</td></tr>\n" +
+    "            </tbody>\n" +
     "        </table>\n" +
     "    </div>\n" +
     "    <div>\n" +
     "        <h4>Notes</h4>\n" +
-    "        <table>\n" +
-    "            <tr ng-if=\"Ctrl.project.comments.legnth > 0\" ng-repeat=\"comments in Ctrl.project.comments\">\n" +
-    "                <td>{{comment.comment || 'No Notes'}}</td>\n" +
+    "        <table style=\"border-spacing:12px;border-collapse:separate;\">\n" +
+    "            <thead>\n" +
+    "            <tr>\n" +
+    "                <th>Created On</th>\n" +
+    "                <th>Text</th>\n" +
     "            </tr>\n" +
-    "            <tr ng-if=\"Ctrl.project.comments.length = 0\">\n" +
-    "                <td>No Comments or Notes For This Project</td>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-if=\"Ctrl.project.comments.length > 0\" ng-repeat=\"comment in Ctrl.project.comments\">\n" +
+    "                <td>{{comment.created_at}}</td>\n" +
+    "                <td>{{comment.comment}}</td>\n" +
     "            </tr>\n" +
+    "            <tr ng-if=\"!Ctrl.project.comments.length > 0\">\n" +
+    "                <td colspan=\"2\">No Comments or Notes For This Project</td>\n" +
+    "            </tr>\n" +
+    "            </tbody>\n" +
     "        </table>\n" +
     "    </div>\n" +
     "</div>");
@@ -109,11 +125,11 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th>Notes</th>\n" +
     "        </tr>\n" +
     "    </thead>\n" +
-    "    <tbody ui-sortable=\"sortableOptions\" ng-model=\"Ctrl.list\">\n" +
+    "    <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
     "        <tr ng-repeat=\"project in Ctrl.projects\">\n" +
-    "            <td><div class=\"myHandle\" style=\"width:5px;height:5px;background:black;\"></div></td>\n" +
+    "            <td class=\"myHandle\"><div  style=\"width:15px;height:15px;background:black;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
-    "            <td><a ui-sref=\"project.item\"> {{project.description}}</a></td>\n" +
+    "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.description}}</a></td>\n" +
     "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
     "            <td>{{project.tasks[0].prority}}</td>\n" +
     "            <td>{{project.tasks[0].deliverable}}</td>\n" +
@@ -139,7 +155,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td><input type=\"text\" ng-model=\"Ctrl.newRow.description\"/></td>\n" +
     "            <td>\n" +
     "                <select ng-model=\"Ctrl.newRow.assignee\">\n" +
-    "                    <option ng-repeat=\"user in Ctrl.users\" value=\"user.id\">{{user.name}}</option>\n" +
+    "                    <option ng-repeat=\"user in Ctrl.users\" value=\"{{user.id}}\">{{user.name}}</option>\n" +
     "                </select>\n" +
     "            </td>\n" +
     "            <td><input type=\"number\"    ng-model=\"Ctrl.newRow.order\"/></td>\n" +

@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 angular.module( 'app.project.item', [])
     .controller( 'ProjectItemCtrl',
         function ProjectItemController(
@@ -5,6 +9,9 @@ angular.module( 'app.project.item', [])
             project, projectsRestService, tasksRestService, commentsRestService
         ) {
             
+            this.project = project;
+
+            console.log(project);
         }
     )
     ;
