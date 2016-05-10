@@ -5879,11 +5879,19 @@ h2 {
 }
 #project_table thead th {
   text-align: center;
-  padding: 10px;
 }
-#project_table td {
+#project_table td,
+#project_table th {
   border: 1px solid slategray;
   padding: 10px;
+}
+#action_buttons,
+#add_project_form {
+  margin: 10px;
+}
+#action_buttons select,
+#add_project_form select {
+  padding: 3px;
 }
 /**
  * Now that all app-wide styles have been applied, we can load the styles for

@@ -139,7 +139,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "\n" +
     "    </tbody>\n" +
     "</table>\n" +
-    "<table ng-if=\"Ctrl.showNewProjectRow\">\n" +
+    "<table ng-if=\"Ctrl.showNewProjectRow\" id=\"add_project_form\">\n" +
     "    <thead>\n" +
     "        <tr>\n" +
     "            <th>Project Description</th>\n" +
@@ -165,9 +165,10 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </tr>\n" +
     "    </tbody>\n" +
     "</table>\n" +
-    "<input ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
-    "<input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
-    "");
+    "<div id=\"action_buttons\">\n" +
+    "    <input ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
+    "    <input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
+    "</div>");
 }]);
 
 angular.module("user/item/template.tpl.html", []).run(["$templateCache", function($templateCache) {
