@@ -5877,11 +5877,14 @@ h2 {
 .odd {
   background: lightgrey;
 }
-#project_table thead th {
+#project_table thead th,
+table thead th {
   text-align: center;
 }
 #project_table td,
-#project_table th {
+table td,
+#project_table th,
+table th {
   border: 1px solid slategray;
   padding: 10px;
 }
