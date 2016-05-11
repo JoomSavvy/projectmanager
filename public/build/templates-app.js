@@ -274,7 +274,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        <tr style=\"border:1px solid gray;background:lightgrey;\">\n" +
     "            <th></th>\n" +
     "            <th>Date</th>\n" +
-    "            <th>Project Description</th>\n" +
+    "            <th>Project Summary</th>\n" +
     "            <th>Task Person</th>\n" +
     "            <th>Urgency</th>\n" +
     "            <th>Action Required</th>\n" +
