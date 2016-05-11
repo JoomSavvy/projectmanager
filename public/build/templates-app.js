@@ -68,9 +68,9 @@ angular.module("login/logout/template.tpl.html", []).run(["$templateCache", func
 angular.module("project/item/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/item/template.tpl.html",
     "<div>\n" +
-    "    <h4>Project Summary: {{Ctrl.project.description}}</h4>\n" +
+    "    <h4>Project Summary: {{Ctrl.project.summary}}</h4>\n" +
     "    <h4>Project Description:</h4>\n" +
-    "    <p>{{Ctrl.project.description}}</p> \n" +
+    "    <p>{{Ctrl.project.description}}</p>\n" +
     "    <div>\n" +
     "        <h4>Tasks</h4>\n" +
     "        <table>\n" +
