@@ -48,6 +48,10 @@ angular.module( 'app.project', [
                 projectsRestService:'projectsRestService',
                 project:function(projectsRestService,$stateParams){
                     return projectsRestService.get({id:$stateParams.id}).$promise;
+                },
+                usersRestService:'usersRestService',
+                users:function(usersRestService){
+                    return usersRestService.query();
                 }
             }
         });

@@ -3,9 +3,9 @@
  */
 
 angular.module( 'resources.tasks',['ngResource'] ).factory('tasksRestService', function ($resource, appUrl) {
-    return $resource(appUrl+'tasks/:taskId',
+    return $resource(appUrl+'tasks/:id',
         {
-            taskId: '@task_id'
+            id: '@id'
         },
         {
             update:{

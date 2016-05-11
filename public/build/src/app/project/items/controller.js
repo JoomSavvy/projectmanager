@@ -14,6 +14,10 @@ angular.module( 'app.project.items', [])
             this.projects = projects;
             this.users = users;
 
+            this.user = {
+                name: 'dummy',
+                id:100
+            };
 
             this.newProject = {};
             this.newTask = {};
@@ -89,7 +93,15 @@ angular.module( 'app.project.items', [])
                 $scope.updateProjects = angular.bind(this,function(){
                     this.projects = projectsRestService.query();
                 });
+                
+                this.showNewProjectRow = false;
             };
     })
+    .filter('urgency',function(){
+        return function(input){
+            return false;
+        }
+    })
+    
     ;
     
