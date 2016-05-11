@@ -68,7 +68,9 @@ angular.module("login/logout/template.tpl.html", []).run(["$templateCache", func
 angular.module("project/item/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/item/template.tpl.html",
     "<div>\n" +
-    "    <h4>Project Description: {{Ctrl.project.description}}</h4>\n" +
+    "    <h4>Project Summary: {{Ctrl.project.description}}</h4>\n" +
+    "    <h4>Project Description:</h4>\n" +
+    "    <p>{{Ctrl.project.description}}</p> \n" +
     "    <div>\n" +
     "        <h4>Tasks</h4>\n" +
     "        <table>\n" +
@@ -240,7 +242,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        <div class=\"form-group\">\n" +
     "            <label class=\"col-md-4 control-label\" for=\"urgency\">Urgency</label>\n" +
     "            <div class=\"col-md-2\">\n" +
-    "                <input id=\"urgency\" ng-model=\"Ctrl.newRow.order\" type=\"text\" placeholder=\"Urgency\" class=\"form-control input-md\">\n" +
+    "                <input id=\"urgency\" ng-model=\"Ctrl.newRow.order\" type=\"number\" placeholder=\"Urgency\" class=\"form-control input-md\">\n" +
     "            </div>\n" +
     "        </div>\n" +
     "        <!-- Text input-->\n" +

@@ -65,7 +65,8 @@ angular.module( 'app.project.items', [])
                 //save project, save task with project id, save comment with project id
                 var project = {
                     description:this.newRow.description,
-                    order_by:this.newRow.order
+                    order_by:this.newRow.order,
+                    summary:this.newRow.summary
                 };
 
                 var task = {
