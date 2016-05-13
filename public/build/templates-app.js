@@ -358,7 +358,7 @@ angular.module("user/items/template.tpl.html", []).run(["$templateCache", functi
     "        <td>{{user.name}}</td>\n" +
     "        <td>{{user.email}}</td>\n" +
     "        <td>{{user.isAdmin && 'Admin' || 'User'}}</td>\n" +
-    "        <td><input type=\"button\" ng-click=\"Ctrl.deleteUser(user)\"/></td>\n" +
+    "        <td><input type=\"button\" ng-click=\"Ctrl.deleteUser(user)\" value=\"X\"/></td>\n" +
     "    </tr>\n" +
     "    </tbody>\n" +
     "</table>\n" +
