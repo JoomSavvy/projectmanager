@@ -55,9 +55,7 @@ angular.module( 'app.project.items', [])
                 var rangeLow=0, rangeHigh=120;
                 increment=(rangeHigh-rangeLow)/(this.projects.length+1);
                 var r = [];
-                //for (var i=rangeLow+increment;i<rangeHigh;i+=increment)
-                //    r.push(i);
-                for (var i=rangeHigh;i>rangeLow;i-=increment)
+                for (var i=rangeLow;i<rangeHigh;i+=increment)
                     r.push(i);
                 return r;
             };
