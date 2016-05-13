@@ -27,3 +27,5 @@ Route::resource('tasks', 'TasksAPIController');
 Route::resource('comments', 'CommentsAPIController');
 
 Route::resource('users', 'UsersAPIController');
+
+Route::resource('auth','AuthAPIController');

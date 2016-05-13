@@ -50,8 +50,26 @@ angular.module( 'app.project.items', [])
                 })
             };
 
+            this.getPriorityGradient = function(){
+                var rangeLow=0, rangeHigh=120;
+                increment=(rangeHigh-rangeLow)/(this.projects.length+1);
+                var r = [];
+                for (var i=rangeLow+increment;i<rangeHigh;i+=increment)
+                    r.push(i);
+                return r;
+            };
+
             this.showNewRow = function(){
                 this.showNewProjectRow = true;
+            };
+
+            this.archiveProject = function(project){
+                console.log(project);
+                project.$delete({id:project.id},
+                    angular.bind(this,function(){
+                    this.projects.splice(this.projects.indexOf(project),1);
+                    })
+                );
             };
 
             this.saveNewRow = function(){

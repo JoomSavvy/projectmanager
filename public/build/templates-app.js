@@ -268,7 +268,19 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "    <input ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
     "    <input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
     "</div>\n" +
-    "\n" +
+    "<table>\n" +
+    "    <tbody>\n" +
+    "    <tr>\n" +
+    "        <td>\n" +
+    "            Filter:\n" +
+    "            <select ng-model=\"Ctrl.projectStateFilter\">\n" +
+    "                <option value=\"active\">Active</option>\n" +
+    "                <option value=\"archived\">Archived</option>\n" +
+    "            </select>\n" +
+    "        </td>\n" +
+    "    </tr>\n" +
+    "    </tbody>\n" +
+    "</table>\n" +
     "<table id=\"project_table\">\n" +
     "    <thead>\n" +
     "        <tr style=\"border:1px solid gray;background:lightgrey;\">\n" +
@@ -280,6 +292,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th>Action Required</th>\n" +
     "            <th>Action Completed</th>\n" +
     "            <th>Notes</th>\n" +
+    "            <th>Archive</th>\n" +
     "        </tr>\n" +
     "    </thead>\n" +
     "    <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
@@ -288,10 +301,11 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
     "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
-    "            <td>{{project.tasks[0].prority}}</td>\n" +
+    "            <td ng-style=\"{'background-color':'hsla('+ Ctrl.getPriorityGradient()[$index]+',100%,50%,1)'}\">{{project.tasks[0].prority}}</td>\n" +
     "            <td>{{project.tasks[0].deliverable}}</td>\n" +
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
     "            <td>{{project.comments[0].comment}}</td>\n" +
+    "            <td><input type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
     "        </tr>\n" +
     "\n" +
     "    </tbody>\n" +
@@ -306,7 +320,48 @@ angular.module("user/item/template.tpl.html", []).run(["$templateCache", functio
 
 angular.module("user/items/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("user/items/template.tpl.html",
-    "<ul>\n" +
-    "    <li ng-repeat=\"user in Ctrl.users\">{{user.name}}</li>\n" +
-    "</ul>");
+    "<table ng-if=\"Ctrl.showingNewUserRow\">\n" +
+    "    <thead>\n" +
+    "        <th>User Name</th>\n" +
+    "        <th>Email</th>\n" +
+    "        <th>System Role</th>\n" +
+    "\n" +
+    "    </thead>\n" +
+    "    <tbody>\n" +
+    "        <td><input type=\"text\" ng-model=\"Ctrl.newUser.name\"/></td>\n" +
+    "        <td><input type=\"email\" ng-model=\"Ctrl.newUser.email\"/></td>\n" +
+    "        <td>\n" +
+    "            <select ng-model=\"Ctrl.newUser.isAdmin\" convert-to-number>\n" +
+    "                <option value=\"1\">Admin</option>\n" +
+    "                <option value=\"0\">User</option>\n" +
+    "            </select>\n" +
+    "        </td>\n" +
+    "\n" +
+    "    </tbody>\n" +
+    "</table>\n" +
+    "<div id=\"action_buttons\">\n" +
+    "    <input ng-if=\"!Ctrl.showingNewUserRow\" type=\"button\" value=\"Add User\" ng-click=\"Ctrl.showingNewUserRow=true\"/>\n" +
+    "    <input ng-if=\"Ctrl.showingNewUserRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow(); Ctrl.showingNewUserRow=false\"/>\n" +
+    "</div>\n" +
+    "\n" +
+    "<table>\n" +
+    "    <thead>\n" +
+    "    <tr>\n" +
+    "        <th>Name</th>\n" +
+    "        <th>Email</th>\n" +
+    "        <th>Role</th>\n" +
+    "        <th>Remove User</th>\n" +
+    "    </tr>\n" +
+    "    </thead>\n" +
+    "    <tbody>\n" +
+    "    <tr  ng-repeat=\"user in Ctrl.users\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "        <td>{{user.name}}</td>\n" +
+    "        <td>{{user.email}}</td>\n" +
+    "        <td>{{user.isAdmin && 'Admin' || 'User'}}</td>\n" +
+    "        <td><input type=\"button\" ng-click=\"Ctrl.deleteUser(user)\"/></td>\n" +
+    "    </tr>\n" +
+    "    </tbody>\n" +
+    "</table>\n" +
+    "\n" +
+    "");
 }]);

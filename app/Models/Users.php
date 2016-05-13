@@ -64,6 +64,7 @@ class Users extends Model
         "name",
         "email",
         "password",
+        "isAdmin",
         "remember_token",
         "created_at",
         "updated_at"
