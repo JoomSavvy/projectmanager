@@ -21,4 +21,15 @@ class ProjectsRepository extends BaseRepository
     {
         return Projects::class;
     }
+
+    public function withTrashed($withTrashed = false)
+    {
+        if($withTrashed === true)
+        {
+            $this->model = $this->model->withTrashed();
+            $this->trashed = true;
+        }
+
+        return $this;
+    }
 }

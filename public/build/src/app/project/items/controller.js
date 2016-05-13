@@ -51,6 +51,15 @@ angular.module( 'app.project.items', [])
                 })
             };
 
+            this.getProjectFilter = function(){
+                if(this.projectStateFilter =='active' ){
+                    return {'deleted_at':null};
+                }else if(this.projectStateFilter == 'archived'){
+                    return {'deleted_at':''}
+                }else if(this.projectStateFilter == 'all'){
+                    return '';
+                }
+            };
             this.getPriorityGradient = function(){
                 var rangeLow=0, rangeHigh=120;
                 increment=(rangeHigh-rangeLow)/(this.projects.length+1);

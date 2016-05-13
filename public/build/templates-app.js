@@ -273,9 +273,10 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "    <tr>\n" +
     "        <td>\n" +
     "            Filter:\n" +
-    "            <select ng-model=\"Ctrl.projectStateFilter\">\n" +
-    "                <option value=\"active\">Active</option>\n" +
+    "            <select ng-init=\"Ctrl.projectStateFilter = 'active'\" ng-model=\"Ctrl.projectStateFilter\">\n" +
+    "                <option value=\"active\" selected=\"true\">Active</option>\n" +
     "                <option value=\"archived\">Archived</option>\n" +
+    "                <option value=\"all\">All</option>\n" +
     "            </select>\n" +
     "        </td>\n" +
     "    </tr>\n" +
@@ -296,7 +297,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </tr>\n" +
     "    </thead>\n" +
     "    <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
-    "        <tr ng-repeat=\"project in Ctrl.projects\" style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "        <tr ng-repeat=\"project in Ctrl.projects | filter:Ctrl.getProjectFilter()\" style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "            <td class=\"myHandle\"><div  style=\"width:15px;height:15px;background:black;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
