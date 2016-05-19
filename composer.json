@@ -14,7 +14,8 @@
         "jlapp/swaggervel": "dev-master",
         "doctrine/dbal": "~2.3",
         "infyomlabs/generator-builder": "dev-master",
-        "barryvdh/laravel-ide-helper": "^2.1"
+        "barryvdh/laravel-ide-helper": "^2.1",
+        "tymon/jwt-auth": "0.5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
