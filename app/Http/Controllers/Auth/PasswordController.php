@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Response;
 
 class PasswordController extends Controller
 {
@@ -25,8 +26,26 @@ class PasswordController extends Controller
      *
      * @return void
      */
+
+    protected $subject = 'Please set your password.';
+
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    protected function getResetSuccessResponse($response){
+        return $this->sendResponse($response, 'Password has been saved successfully');
+    }
+
+    protected function getResetFailureResponse( $request, $response)
+    {
+        return $this->sendResponse('Password failed to save successfully',500);
+    }
+
+    public function sendResponse($result, $status)
+    {
+        //return Response::json(ResponseUtil::makeResponse($message, $result));
+        return Response::json( $result,$status );
     }
 }

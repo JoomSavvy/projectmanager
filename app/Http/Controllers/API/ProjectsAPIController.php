@@ -27,6 +27,7 @@ class ProjectsAPIController extends AppBaseController
 
     public function __construct(ProjectsRepository $projectsRepo)
     {
+        $this->middleware('jwt.auth');
         $this->projectsRepository = $projectsRepo;
     }
 
