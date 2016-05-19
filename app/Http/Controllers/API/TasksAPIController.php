@@ -25,6 +25,7 @@ class TasksAPIController extends AppBaseController
 
     public function __construct(TasksRepository $tasksRepo)
     {
+        $this->middleware('jwt.auth');
         $this->tasksRepository = $tasksRepo;
     }
 

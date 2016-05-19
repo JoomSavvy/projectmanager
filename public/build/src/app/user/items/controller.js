@@ -11,11 +11,22 @@ angular.module( 'app.user.items', [])
         
         this.saveNewRow = function(){
             this.newUser.isAdmin = parseInt(this.newUser.isAdmin);
-            console.log(this.newUser);
-            usersRestService.save(this.newUser).$promise.then(angular.bind(this,function(newUser){
-                this.users.push(newUser)
-            }));
-        }
+            usersRestService.save(this.newUser).$promise.then(
+                angular.bind(this,function(newUser){
+                    this.users.push(newUser)
+                })
+            );
+        };
+
+        this.deleteUser = function(user){
+            var userIndex = this.users.indexOf(user);
+           user.$delete({id:user.id},
+                angular.bind(this,function(user){
+                    this.users.splice(userIndex,1);
+                })
+
+            )
+        };
     })
    
     ;

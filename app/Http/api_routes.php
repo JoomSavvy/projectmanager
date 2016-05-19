@@ -28,4 +28,5 @@ Route::resource('comments', 'CommentsAPIController');
 
 Route::resource('users', 'UsersAPIController');
 
-Route::resource('auth','AuthAPIController');
+Route::post('auth/login', 'AuthAPIController@login');
+Route::get('auth/user', 'AuthAPIController@getAuthenticatedUser');

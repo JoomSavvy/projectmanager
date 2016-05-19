@@ -13,6 +13,8 @@ use InfyOm\Generator\Utils\ResponseUtil;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
+use Illuminate\Foundation\Auth\ResetsPasswords;
+
 /**
  * Class UsersController
  * @package App\Http\Controllers\API
@@ -20,11 +22,14 @@ use Response;
 
 class UsersAPIController extends AppBaseController
 {
+    use ResetsPasswords;
+
     /** @var  UsersRepository */
     private $usersRepository;
 
     public function __construct(UsersRepository $usersRepo)
     {
+        $this->middleware('jwt.auth');
         $this->usersRepository = $usersRepo;
     }
 
@@ -112,6 +117,8 @@ class UsersAPIController extends AppBaseController
         $input = $request->all();
 
         $users = $this->usersRepository->create($input);
+
+        $this->postEmail($request);
 
         return $this->sendResponse($users->toArray(), 'Users saved successfully');
     }

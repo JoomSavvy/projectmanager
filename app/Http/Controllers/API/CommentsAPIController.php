@@ -25,6 +25,7 @@ class CommentsAPIController extends AppBaseController
 
     public function __construct(CommentsRepository $commentsRepo)
     {
+        $this->middleware('jwt.auth');
         $this->commentsRepository = $commentsRepo;
     }
 
