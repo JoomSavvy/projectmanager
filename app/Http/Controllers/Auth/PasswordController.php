@@ -35,7 +35,7 @@ class PasswordController extends Controller
     }
 
     protected function getResetSuccessResponse($response){
-        return $this->sendResponse($response, 'Password has been saved successfully');
+        return $this->sendResponse('Password has been saved successfully' );
     }
 
     protected function getResetFailureResponse( $request, $response)

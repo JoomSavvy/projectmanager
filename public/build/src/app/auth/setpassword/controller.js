@@ -7,7 +7,7 @@ angular.module( 'app.auth.setpassword', [])
     /**
      * And of course we define a controller for our route.
      */
-    .controller( 'AuthSetpasswordCtrl', function AuthSetpasswordController( $scope,$filter, $stateParams) {
+    .controller( 'AuthSetpasswordCtrl', function AuthSetpasswordController( $scope,$filter, $stateParams,$http) {
 
 
         this.request = {};
@@ -19,8 +19,7 @@ angular.module( 'app.auth.setpassword', [])
                 url: '/password/reset',
                 data:this.request
             }).then(function successCallback(response) {
-                // this callback will be called asynchronously
-                // when the response is available
+                $state.go('auth.login');
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.

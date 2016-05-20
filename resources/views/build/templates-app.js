@@ -90,7 +90,7 @@ angular.module("auth/setpassword/template.tpl.html", []).run(["$templateCache", 
     "\n" +
     "                        <label class=\"col-lg-3 control-label\" for=\"userPassword\">Confirm Password</label>\n" +
     "                        <div class=\"col-lg-4\">\n" +
-    "                            <input ng-model=\"Ctrl.request.confirm_password\"  id=\"userConfirmPassword\"\n" +
+    "                            <input ng-model=\"Ctrl.request.password_confirmation\"  id=\"userConfirmPassword\"\n" +
     "                                   class=\"form-control\" type=\"password\" placeholder=\"******\">\n" +
     "                        </div>\n" +
     "                    </div>\n" +
@@ -145,7 +145,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"2\"> No Tasks Associated With This Project</td></tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
-    "        <div id=\"add_taskrow_container\">\n" +
+    "        <div ng-if=\"Ctrl.user.isAdmin\" id=\"add_taskrow_container\">\n" +
     "            <table ng-if=\"Ctrl.showingNewTaskRow\" id=\"add_project_form\">\n" +
     "                <thead>\n" +
     "                <tr>\n" +
@@ -314,12 +314,12 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "\n" +
     "\n" +
     "</form>\n" +
-    "<div id=\"action_buttons\">\n" +
+    "<div id=\"action_buttons\"  ng-if=\"Ctrl.user.isAdmin\">\n" +
     "    <input ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
     "    <input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
     "    <input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Cancel\" ng-click=\"Ctrl.showNewProjectRow=false\"/>\n" +
     "</div>\n" +
-    "<table>\n" +
+    "<table ng-if=\"Ctrl.user.isAdmin\">\n" +
     "    <tbody>\n" +
     "    <tr>\n" +
     "        <td>\n" +
@@ -344,7 +344,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th>Action Required</th>\n" +
     "            <th>Action Completed</th>\n" +
     "            <th>Notes</th>\n" +
-    "            <th>Archive</th>\n" +
+    "            <th  ng-if=\"Ctrl.user.isAdmin\">Archive</th>\n" +
     "        </tr>\n" +
     "    </thead>\n" +
     "    <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
@@ -357,7 +357,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.tasks[0].deliverable}}</td>\n" +
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
     "            <td>{{project.comments[0].comment}}</td>\n" +
-    "            <td><input type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
+    "            <td ng-if=\"Ctrl.user.isAdmin\"><input type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
     "        </tr>\n" +
     "\n" +
     "    </tbody>\n" +

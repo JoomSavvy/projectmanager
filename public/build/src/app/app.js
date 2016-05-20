@@ -105,10 +105,11 @@
         });
     })
 
-    .controller( 'AppCtrl', function AppCtrl ( $scope,userSessionService,usersRestService ) {
+    .controller( 'AppCtrl', function AppCtrl ( $scope,userSessionService,usersRestService,$rootScope ) {
 
         this.users = usersRestService.query();
-        this.user = userSessionService.get();
+        //this.user = userSessionService.get();
+        this.user = $rootScope.currentUser;
         
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
             if ( angular.isDefined( toState.data.pageTitle ) ) {

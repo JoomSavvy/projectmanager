@@ -5,17 +5,14 @@
 angular.module( 'app.project.item', [])
     .controller( 'ProjectItemCtrl',
         function ProjectItemController(
-            $scope, $filter, $stateParams,
+            $scope, $filter, $stateParams,$rootScope,
             project, users,
             projectsRestService, tasksRestService, commentsRestService
         ) {
             this.users = users;
             this.project = project;
 
-            this.user = {
-                name:'dummy user',
-                id:'100'
-            };
+            this.user = $rootScope.currentUser;
     
             this.newTaskRow = {
                 project_id:this.project.id

@@ -5,7 +5,7 @@
 angular.module( 'app.project.items', [])
     .controller( 'ProjectItemsCtrl',
         function ProjectItemsController(
-            $scope,$filter, $stateParams,
+            $scope,$filter, $stateParams,$rootScope,
             projects, users, projectsRestService,tasksRestService,commentsRestService
         ) {
 
@@ -14,10 +14,7 @@ angular.module( 'app.project.items', [])
             this.projects = projects;
             this.users = users;
 
-            this.user = {
-                name: 'dummy',
-                id:100
-            };
+            this.user = $rootScope.currentUser;
 
             this.newProject = {};
             this.newTask = {};
