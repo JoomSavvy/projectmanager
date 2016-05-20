@@ -1,17 +1,17 @@
- angular.module( 'app', [
-    'app.project',
-    'app.user',
-    'app.auth',
-    'app.filters',
-    'templates-app',
-    'templates-common',
-    'angular-loading-bar',
-    'ngResource',
-    'ui.router',
-    'ui.sortable',
-    'ui.bootstrap',
-    'services.user.session',
-     'satellizer'
+angular.module( 'app', [
+        'app.project',
+        'app.user',
+        'app.auth',
+        'app.filters',
+        'templates-app',
+        'templates-common',
+        'angular-loading-bar',
+        'ngResource',
+        'ui.router',
+        'ui.sortable',
+        'ui.bootstrap',
+        'services.user.session',
+        'satellizer'
     ])
     .constant('appUrl', '/api/v1/')
     .config( function config ( $stateProvider, $urlRouterProvider,   $httpProvider,$locationProvider ,$authProvider, $provide) {
@@ -90,6 +90,7 @@
                 // we are grabbing what is in local storage
                 $rootScope.currentUser = user;
 
+
                 // If the user is logged in and we hit the auth route we don't need
                 // to stay there and can send the user to the main state
                 if(toState.name === "auth") {
@@ -110,16 +111,16 @@
         this.users = usersRestService.query();
         //this.user = userSessionService.get();
         this.user = $rootScope.currentUser;
-        
+
+        console.log($rootScope.currentUser);
+        console.log($rootScope);
+
+
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle + ' | Client Intake' ;
             }
         });
-
-
-        this.userTypeIsAdmin = true;
-        this.userTypeIsUser = true;
 
         this.loadUser = function(){
             userSessionService.load(this.user.userName);
