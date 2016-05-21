@@ -35,7 +35,7 @@ angular.module( 'app.project.items', [])
                     angular.forEach($filter('filter')(this.projects,{'deleted_at':null}),function(value,index,projects){
                         //value.order_by = index;
                         console.log(index);
-                        if(projects[index].order_by != index+1){
+                        if(parseInt(projects[index].order_by) != index+1){
                             projects[index].order_by = index+1;
 
                             projectsRestService.update({id:value.id},value);

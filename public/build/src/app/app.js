@@ -113,11 +113,7 @@ angular.module( 'app', [
         this.users = usersRestService.query();
         //this.user = userSessionService.get();
         this.user = $rootScope.currentUser;
-
-        console.log($rootScope.currentUser);
-        console.log($rootScope);
-
-
+        
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
                 $scope.pageTitle = toState.data.pageTitle + ' | Client Intake' ;
