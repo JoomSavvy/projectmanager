@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Response;
+use Log;
 
 class PasswordController extends Controller
 {
@@ -47,5 +48,20 @@ class PasswordController extends Controller
     {
         //return Response::json(ResponseUtil::makeResponse($message, $result));
         return Response::json( $result,$status );
+    }
+    
+    protected function getSendResetLinkEmailSuccessResponse($response){
+
+
+        $result = 'Password Reset Link Sent';
+        $status = 200;
+        return $this->sendResponse($result,$status);
+    }
+
+    protected function getSendResetLinkEmailFailureResponse($response)
+    {
+        $result = 'Invalid Email';
+        $status = 400;
+        return $this->sendResponse($result,$status);
     }
 }

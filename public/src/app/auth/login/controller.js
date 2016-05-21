@@ -51,6 +51,28 @@ angular.module( 'app.auth.login', [])
                 $state.go('project.items');
             });
         }
+        
+        this.submitPasswordResetRequest = function(){
+            this.resetResultMessage = false;
+            $http.post('/password/email',{email:this.request.email})
+                .then(
+                    angular.bind(this,
+                        function(response){
+                            this.resetResultMessageStatus = 'alert alert-success';
+                            this.resetResultMessage = response.data;
+                        }
+                    )
+                    ,
+                    angular.bind(this,
+                        function(response){
+                            this.resetResultMessageStatus = 'alert alert-danger';
+                            this.resetResultMessage = response.data;
+                        }
+                    )
+
+                );
+
+        }
 
     })
     ;

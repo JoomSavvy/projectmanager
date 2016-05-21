@@ -15,7 +15,7 @@
 <h2>Password Reset</h2>
 
 <div>
-    An account has been created for you on the project manager application. To begin using it you need to first set your password.<br/>
+    An request has been submitted for you set a password for the the project manager application. <br/>
 
     Please click <a href="{{ url('/#/auth/setpassword/'.$token) }}">HERE</a> or copy the address below into your browser's address bar:<br/>
     {{ url('/#/auth/setpassword/'.$token) }}

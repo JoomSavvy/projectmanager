@@ -5,7 +5,7 @@ angular.module("auth/login/template.tpl.html", []).run(["$templateCache", functi
     "<div class=\"container-fluid\">\n" +
     "    <div class=\"row\">\n" +
     "        <div class=\"col-lg-6 col-lg-offset-3\">\n" +
-    "            <fieldset>\n" +
+    "            <fieldset ng-if=\"!Ctrl.showingPasswordResetForm\">\n" +
     "                <legend>Login</legend>\n" +
     "                <form name=\"loginForm\" class=\"form-horizontal\">\n" +
     "                    <div class=\"form-group\">\n" +
@@ -42,12 +42,37 @@ angular.module("auth/login/template.tpl.html", []).run(["$templateCache", functi
     "                    <hr>\n" +
     "                    <div class=\"form-horizontal\">\n" +
     "                        <div class=\"form-group\">\n" +
-    "                            <!--Sample state-->\n" +
-    "                            <a class=\"col-lg-4\" ui-sref=\"Ctrl.resetPassword()\" target=\"_blank\">Forgot your password?</a>\n" +
+    "                            <a class=\"col-lg-4\" ng-click=\"Ctrl.showingPasswordResetForm=true\">Forgot your password?</a>\n" +
     "                        </div>\n" +
     "                    </div>\n" +
     "\n" +
     "                </form>\n" +
+    "            </fieldset>\n" +
+    "            <fieldset ng-if=\"Ctrl.showingPasswordResetForm\">\n" +
+    "                <legend>Reset Password</legend>\n" +
+    "                <p>Please enter the email for the account.</p>\n" +
+    "                <form id=\"passwordResetForm\" class=\"form-horizontal\">\n" +
+    "                    <div class=\"form-group\">\n" +
+    "                        <label class=\"col-lg-2 control-label\" for=\"userEmail\">Email</label>\n" +
+    "                        <div class=\"col-lg-6\">\n" +
+    "                            <input ng-model=\"Ctrl.request.email\" id=\"userEmail\" class=\"form-control\"\n" +
+    "                                   type=\"email\" placeholder=\"johndoe@company.com\">\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                    <hr>\n" +
+    "                    <div ng-if=\"Ctrl.resetResultMessage\" class=\"message\" ng-class=\"Ctrl.resetResultMessageStatus\">\n" +
+    "                        {{Ctrl.resetResultMessage}}\n" +
+    "                    </div>\n" +
+    "                    <div class=\"form-group  col-lg-6 btn-group-sm \">\n" +
+    "                        <button class=\"btn btn-primary col-lg-offset-6 \" ng-click=\"Ctrl.submitPasswordResetRequest()\">\n" +
+    "                            Submit\n" +
+    "                        </button>\n" +
+    "                        <button class=\"btn btn-primary\" ng-click=\"Ctrl.showingPasswordResetForm=false\">\n" +
+    "                            Cancel\n" +
+    "                        </button>\n" +
+    "                    </div>\n" +
+    "                </form>\n" +
+    "\n" +
     "            </fieldset>\n" +
     "        </div>\n" +
     "    </div>\n" +
@@ -333,8 +358,9 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "    </tr>\n" +
     "    </tbody>\n" +
     "</table>\n" +
-    "<table id=\"project_table\">\n" +
-    "    <thead>\n" +
+    "<div id=\"project_tables\">\n" +
+    "    <table id=\"project_table\">\n" +
+    "        <thead>\n" +
     "        <tr style=\"border:1px solid gray;background:lightgrey;\">\n" +
     "            <th></th>\n" +
     "            <th>Date</th>\n" +
@@ -346,9 +372,11 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th>Notes</th>\n" +
     "            <th  ng-if=\"Ctrl.user.isAdmin\">Archive</th>\n" +
     "        </tr>\n" +
-    "    </thead>\n" +
-    "    <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
-    "        <tr ng-repeat=\"project in Ctrl.projects | filter:Ctrl.getProjectFilter()\" style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "        </thead>\n" +
+    "        <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
+    "        <tr ng-if=\"(Ctrl.projectStateFilter == 'active') || (Ctrl.projectStateFilter == 'all')\"\n" +
+    "            ng-repeat=\"project in Ctrl.projects | filter:{'deleted_at':null}\"\n" +
+    "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "            <td class=\"myHandle\"><div  style=\"width:15px;height:15px;background:black;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
@@ -359,9 +387,23 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.comments[0].comment}}</td>\n" +
     "            <td ng-if=\"Ctrl.user.isAdmin\"><input type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
     "        </tr>\n" +
+    "        <tr ng-if=\"(Ctrl.projectStateFilter == 'archived') || (Ctrl.projectStateFilter == 'all')\"\n" +
+    "            ng-repeat=\"project in Ctrl.projects | filter: {'deleted_at':''}\"\n" +
+    "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "            <td><div  style=\"width:15px;height:15px;background:transparent;\"></div></td>\n" +
+    "            <td>{{project.created_at}}</td>\n" +
+    "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
+    "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
+    "            <td ng-style=\"{'background-color':'grey'}\"><div style=\"color:transparent;\">urgency</div></td>\n" +
+    "            <td>{{project.tasks[0].deliverable}}</td>\n" +
+    "            <td>{{project.tasks[0].delivered}}</td>\n" +
+    "            <td>{{project.comments[0].comment}}</td>\n" +
+    "            <td ng-if=\"Ctrl.user.isAdmin\"><input disabled=\"true\" type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
+    "        </tr>\n" +
+    "        </tbody>\n" +
+    "    </table>\n" +
+    "</div>\n" +
     "\n" +
-    "    </tbody>\n" +
-    "</table>\n" +
     "");
 }]);
 
