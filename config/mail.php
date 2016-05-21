@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'joseph.cardwell@joomsavvy.com', 'name' => 'Joseph Cardwell'],
+    'from' => ['address' => 'jsibel@rhasales.com', 'name' => 'James Sibel'],
 
     /*
     |--------------------------------------------------------------------------
