@@ -57,7 +57,8 @@ class Projects extends Model
      * @var array
      */
     protected $casts = [
-        'description' => 'string'
+        'description' => 'string',
+        'order_by'=>'integer'
     ];
 
     /**
