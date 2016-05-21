@@ -32,7 +32,7 @@ angular.module( 'app.project.items', [])
                 stop: angular.bind(this,function(e, ui) {
 
                     console.log(this.list);
-                    angular.forEach(filter('filter')(this.projects,{'deleted_at':null}),function(value,index,projects){
+                    angular.forEach($filter('filter')(this.projects,{'deleted_at':null}),function(value,index,projects){
                         //value.order_by = index;
                         console.log(index);
                         if(projects[index].order_by != index+1){
