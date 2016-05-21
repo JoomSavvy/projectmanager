@@ -12,6 +12,7 @@ angular.module( 'app.project.items', [])
             this.showNewProjectRow = false;
             this.newRow = {};
             this.projects = projects;
+            this.activeProjects = $filter('filter')(this.projects,{'deleted_at':null});
             this.users = users;
 
             this.user = $rootScope.currentUser;
@@ -21,7 +22,6 @@ angular.module( 'app.project.items', [])
             this.newComment = {};
 
             this.tempList = [];
-            this.list = projects;
 
             this.sortingLog = [];
 
@@ -30,19 +30,13 @@ angular.module( 'app.project.items', [])
                 update: function(e, ui) {
                 },
                 stop: angular.bind(this,function(e, ui) {
-
-                    console.log(this.list);
-                    angular.forEach($filter('filter')(this.projects,{'deleted_at':null}),function(value,index,projects){
-                        //value.order_by = index;
-                        console.log(index);
+                    angular.forEach(this.activeProjects,function(value,index,projects){
                         if(parseInt(projects[index].order_by) != index+1){
                             projects[index].order_by = index+1;
 
                             projectsRestService.update({id:value.id},value);
                         }
                     },this);
-                    console.log(this.projects);
-
                 })
             };
 

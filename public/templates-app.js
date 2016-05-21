@@ -373,9 +373,9 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th  ng-if=\"Ctrl.user.isAdmin\">Archive</th>\n" +
     "        </tr>\n" +
     "        </thead>\n" +
-    "        <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.projects\" class=\"list\">\n" +
+    "        <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.activeProjects\" class=\"list\">\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'active') || (Ctrl.projectStateFilter == 'all')\"\n" +
-    "            ng-repeat=\"project in Ctrl.projects | filter:{'deleted_at':null}\"\n" +
+    "            ng-repeat=\"project in Ctrl.activeProjects | filter:{'deleted_at':null}\"\n" +
     "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "            <td class=\"myHandle\"><div  style=\"width:15px;height:15px;background:black;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
@@ -387,6 +387,8 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.comments[0].comment}}</td>\n" +
     "            <td ng-if=\"Ctrl.user.isAdmin\"><input type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
     "        </tr>\n" +
+    "        <tbody/>\n" +
+    "        <tbody>\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'archived') || (Ctrl.projectStateFilter == 'all')\"\n" +
     "            ng-repeat=\"project in Ctrl.projects | filter: {'deleted_at':''}\"\n" +
     "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
