@@ -32,7 +32,7 @@ angular.module( 'app.project.items', [])
                 stop: angular.bind(this,function(e, ui) {
 
                     console.log(this.list);
-                    angular.forEach(this.projects,function(value,index,projects){
+                    angular.forEach($filter('filter')(this.projects,{'deleted_at':null}),function(value,index,projects){
                         //value.order_by = index;
                         console.log(index);
                         if(projects[index].order_by != index+1){
@@ -40,8 +40,6 @@ angular.module( 'app.project.items', [])
 
                             projectsRestService.update({id:value.id},value);
                         }
-
-
                     },this);
                     console.log(this.projects);
 
@@ -57,6 +55,7 @@ angular.module( 'app.project.items', [])
                     return '';
                 }
             };
+
             this.getPriorityGradient = function(){
                 var rangeLow=0, rangeHigh=120;
                 increment=(rangeHigh-rangeLow)/(this.projects.length+1);
