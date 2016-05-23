@@ -109,7 +109,7 @@ angular.module( 'app', [
         });
     })
 
-    .controller( 'AppCtrl', function AppCtrl ( $scope,$state, userSessionService,usersRestService,$rootScope ) {
+    .controller( 'AppCtrl', function AppCtrl ( $scope,$state, $auth, userSessionService,usersRestService,$rootScope ) {
 
         this.user = userSessionService.get();
         this.users = usersRestService.query();
@@ -126,11 +126,23 @@ angular.module( 'app', [
         
         this.logout = function(){
             console.log(this.user);
+            $auth.logout().then(function() {
+
+                // Remove the authenticated user from local storage
+                localStorage.removeItem('user');
+
+                // Flip authenticated to false so that we no longer
+                // show UI elements dependant on the user being logged in
+                $rootScope.authenticated = false;
+
+                // Remove the current user info from rootscope
+                $rootScope.currentUser = null;
+            });
             userSessionService.logout();
             // Send the user to the auth state so they can login
-            $state.go('auth.login');
             this.user = userSessionService.get();
-            console.log(this.user);
+            console.log(this.user);localStorage.removeItem('user');
+            $state.go('auth.login');
         };
 
     })
