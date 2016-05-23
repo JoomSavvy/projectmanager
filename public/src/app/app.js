@@ -67,7 +67,7 @@ angular.module( 'app', [
         //$locationProvider.html5Mode(true);        
     })
 
-    .run( function run ($rootScope /*, RouterTracker */) {
+    .run( function run ($rootScope, $state, userSessionService /*, RouterTracker */) {
         $rootScope.$on("$stateChangeError", console.log.bind(console));
         $rootScope._ = _;
 
@@ -86,6 +86,7 @@ angular.module( 'app', [
                 // true so we can now show parts of the UI that rely
                 // on the user being logged in
                 $rootScope.authenticated = true;
+                userSessionService.set(user);
 
                 // Putting the user's data on $rootScope allows
                 // us to access it anywhere across the app. Here
@@ -95,24 +96,23 @@ angular.module( 'app', [
 
                 // If the user is logged in and we hit the auth route we don't need
                 // to stay there and can send the user to the main state
-                if(toState.name === "auth") {
+                if(toState.name === "auth.login") {
 
                     // Preventing the default behavior allows us to use $state.go
                     // to change states
                     event.preventDefault();
 
                     // go to the "main" state which in our case is users
-                    $state.go('users');
+                    $state.go('project.items');
                 }
             }
         });
     })
 
-    .controller( 'AppCtrl', function AppCtrl ( $scope,userSessionService,usersRestService,$rootScope ) {
+    .controller( 'AppCtrl', function AppCtrl ( $scope,$state, userSessionService,usersRestService,$rootScope ) {
 
+        this.user = userSessionService.get();
         this.users = usersRestService.query();
-        //this.user = userSessionService.get();
-        this.user = $rootScope.currentUser;
         
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
@@ -120,15 +120,19 @@ angular.module( 'app', [
             }
         });
 
-        this.loadUser = function(){
-            userSessionService.load(this.user.userName);
+        $scope.$on('user:updated',angular.bind(this,function(event,data){
+            this.user = userSessionService.get();
+        }));
+        
+        this.logout = function(){
+            console.log(this.user);
+            userSessionService.logout();
+            // Send the user to the auth state so they can login
+            $state.go('auth.login');
+            this.user = userSessionService.get();
+            console.log(this.user);
         };
 
-        this.updateUserType = function(){
-            userSessionService.setType(this.userType);
-            this.userType == 'admin' && ((this.userTypeIsAdmin = true) && (this.userTypeIsUser = false) )
-            || ((this.userTypeIsAdmin = false) && (this.userTypeIsUser = true));
-        };
     })
     .directive('convertToNumber', function() {
         return {

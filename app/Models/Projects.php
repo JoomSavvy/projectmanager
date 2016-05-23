@@ -48,7 +48,8 @@ class Projects extends Model
         'description',
         'order_by',
         'summary',
-        'user_id'
+        'user_id',
+        'state'
     ];
 
     /**
@@ -57,8 +58,10 @@ class Projects extends Model
      * @var array
      */
     protected $casts = [
+        'id'=>'integer',
         'description' => 'string',
-        'order_by'=>'integer'
+        'order_by'=>'integer',
+        'state'=>'integer'
     ];
 
     /**

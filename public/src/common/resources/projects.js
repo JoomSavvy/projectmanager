@@ -8,9 +8,18 @@ angular.module( 'resources.projects',['ngResource'] ).factory('projectsRestServi
             id:'@id'
         },
         {
+            forceDelete:{
+                method:'DELETE',
+                url:appUrl+'projects/:id/hard'
+            },
             update:{
                 method:'PUT'
+            },
+            restore:{
+                method:'PUT',
+                url:appUrl+'projects/:id/restore'
             }
+            
         }
     );
 });

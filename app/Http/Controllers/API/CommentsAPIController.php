@@ -114,6 +114,8 @@ class CommentsAPIController extends AppBaseController
 
         $comments = $this->commentsRepository->create($input);
 
+        $comments::notifyBob($comments);
+
         return $this->sendResponse($comments->toArray(), 'Comments saved successfully');
     }
 

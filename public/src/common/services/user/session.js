@@ -3,14 +3,10 @@
  */
 
 
-angular.module( 'services.user.session',['resources.users'] ).service('userSessionService', function(usersRestService) {
+angular.module( 'services.user.session',['resources.users'] )
+    .service('userSessionService', function($rootScope, usersRestService) {
 
-    var user = {
-        "isAdmin": true,
-        "name": "",
-        "email": "",
-        "id":null
-    };
+    var user = {};
 
     var isLoggedIn = false;
 
@@ -20,10 +16,18 @@ angular.module( 'services.user.session',['resources.users'] ).service('userSessi
         console.log(user);
     }
 
+    function logout(){
+        isLoggedIn = false;
+        user = {};
+        localStorage.removeItem('user');
+        $rootScope.$broadcast('user:updated');
+    }
+
     function set(userObject) {
         console.log('session user set');
         user = userObject;
         isLoggedIn = true;
+        $rootScope.$broadcast('user:updated');
     }
 
     function get() {
@@ -40,7 +44,8 @@ angular.module( 'services.user.session',['resources.users'] ).service('userSessi
         set: set,
         get: get,
         load: loadUser,
-        isLoggedIn: function(){return isLoggedIn;}
+        isLoggedIn: function(){return isLoggedIn;},
+        logout: logout
 
     };
 });

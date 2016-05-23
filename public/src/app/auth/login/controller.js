@@ -7,7 +7,7 @@ angular.module( 'app.auth.login', [])
     /**
      * And of course we define a controller for our route.
      */
-    .controller( 'AuthLoginCtrl', function AuthLoginController( $auth, $http, $scope,$filter, $stateParams, $state, $rootScope ) {
+    .controller( 'AuthLoginCtrl', function AuthLoginController( $auth, $http, $scope,$filter, $stateParams, $state, $rootScope, userSessionService ) {
 
         var response = {};
         this.submitForm = function(){
@@ -36,6 +36,7 @@ angular.module( 'app.auth.login', [])
 
                 // Set the stringified user data into local storage
                 localStorage.setItem('user', user);
+                userSessionService.set(user);
 
                 // The user's authenticated state gets flipped to
                 // true so we can now show parts of the UI that rely

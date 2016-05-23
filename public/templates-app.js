@@ -1,4 +1,4 @@
-angular.module('templates-app', ['auth/login/template.tpl.html', 'auth/logout/template.tpl.html', 'auth/setpassword/template.tpl.html', 'project/item/template.tpl.html', 'project/items/template.tpl.html', 'user/item/template.tpl.html', 'user/items/template.tpl.html']);
+angular.module('templates-app', ['auth/login/template.tpl.html', 'auth/logout/template.tpl.html', 'auth/setpassword/template.tpl.html', 'project/item/template.tpl.html', 'project/items/notesmodal.tpl.html', 'project/items/template.tpl.html', 'user/item/template.tpl.html', 'user/items/template.tpl.html']);
 
 angular.module("auth/login/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("auth/login/template.tpl.html",
@@ -163,7 +163,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                <td>\n" +
     "                    <div ng-if=\"task.delivered != ''\">{{task.delivered}}</div>\n" +
     "                    <div ng-if=\"task.delivered == ''\">\n" +
-    "                        <input type=\"text\" ng-model=\"Ctrl.newTaskDelivered\"/><a href=\"\" class=\"md-check\" ng-click=\"Ctrl.updateTask(task)\">✔</a>\n" +
+    "                        <input type=\"text\" ng-model=\"Ctrl.newTaskDelivered\"/><a href=\"\"  ng-click=\"Ctrl.updateTask(task)\"><i class=\"glyphicon glyphicon-check\"></i></a>\n" +
     "                    </div>\n" +
     "                </td>\n" +
     "            </tr>\n" +
@@ -190,8 +190,8 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                </tbody>\n" +
     "            </table>\n" +
     "            <div id=\"action_buttons\">\n" +
-    "                <input ng-if=\"!Ctrl.showingNewTaskRow\" type=\"button\" value=\"Add Task\" ng-click=\"Ctrl.showingNewTaskRow=true\"/>\n" +
-    "                <input ng-if=\"Ctrl.showingNewTaskRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewTaskRow()\"/>\n" +
+    "                <input class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewTaskRow\" type=\"button\" value=\"Add Task\" ng-click=\"Ctrl.showingNewTaskRow=true\"/>\n" +
+    "                <input class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTaskRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewTaskRow()\"/>\n" +
     "            </div>\n" +
     "        </div>\n" +
     "\n" +
@@ -227,17 +227,51 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                </thead>\n" +
     "                <tbody>\n" +
     "                <tr >\n" +
-    "                    <td><textarea ng-model=\"Ctrl.newCommentRow.comment\"></textarea></td>\n" +
+    "                    <td><textarea rows=\"25\" cols=\"50\" ng-model=\"Ctrl.newCommentRow.comment\"></textarea></td>\n" +
     "                </tr>\n" +
     "                </tbody>\n" +
     "            </table>\n" +
     "            <div id=\"action_buttons\">\n" +
-    "                <input ng-if=\"!Ctrl.showingNewCommentRow\" type=\"button\" value=\"Add Note\" ng-click=\"Ctrl.showingNewCommentRow=true\"/>\n" +
-    "                <input ng-if=\"Ctrl.showingNewCommentRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewCommentRow();Ctrl.showingNewCommentRow=false\"/>\n" +
+    "                <input class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewCommentRow\" type=\"button\" value=\"Add Note\" ng-click=\"Ctrl.showingNewCommentRow=true\"/>\n" +
+    "                <input class=\"btn btn-warning\" ng-if=\"Ctrl.showingNewCommentRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewCommentRow();Ctrl.showingNewCommentRow=false\"/>\n" +
     "            </div>\n" +
     "        </div>\n" +
     "    </div>\n" +
     "</div>");
+}]);
+
+angular.module("project/items/notesmodal.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("project/items/notesmodal.tpl.html",
+    "<div>\n" +
+    "    <div class=\"modal-header\">\n" +
+    "        <h3 class=\"modal-title\">Project Notes</h3>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-body\">\n" +
+    "        <table style=\"width:100%;\">\n" +
+    "            <thead>\n" +
+    "            <tr>\n" +
+    "                <th>Created On</th>\n" +
+    "                <th>Created By</th>\n" +
+    "                <th>Text</th>\n" +
+    "            </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-if=\"ModalCtrl.comments.length > 0\" ng-repeat=\"comment in ModalCtrl.comments\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "                <td>{{comment.created_at}}</td>\n" +
+    "                <td>{{ (ModalCtrl.users | filter:{id:comment.user_id})[0].name }}</td>\n" +
+    "                <td>{{comment.comment}}</td>\n" +
+    "            </tr>\n" +
+    "            <tr ng-if=\"!ModalCtrl.comments.length > 0\">\n" +
+    "                <td colspan=\"2\">No Comments or Notes For This Project</td>\n" +
+    "            </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-footer\">\n" +
+    "        <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">OK</button>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("project/items/template.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -340,9 +374,9 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "\n" +
     "</form>\n" +
     "<div id=\"action_buttons\"  ng-if=\"Ctrl.user.isAdmin\">\n" +
-    "    <input ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
-    "    <input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
-    "    <input ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Cancel\" ng-click=\"Ctrl.showNewProjectRow=false\"/>\n" +
+    "    <input class=\"btn btn-xs btn-primary\" ng-if=\"!Ctrl.showNewProjectRow\" type=\"button\" value=\"Add Project\" ng-click=\"Ctrl.showNewRow()\"/>\n" +
+    "    <input class=\"btn btn-xs btn-success\" ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewRow()\"/>\n" +
+    "    <input class=\"btn btn-xs btn-danger\" ng-if=\"Ctrl.showNewProjectRow\" type=\"button\" value=\"Cancel\" ng-click=\"Ctrl.showNewProjectRow=false\"/>\n" +
     "</div>\n" +
     "<table ng-if=\"Ctrl.user.isAdmin\">\n" +
     "    <tbody>\n" +
@@ -352,55 +386,77 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <select ng-init=\"Ctrl.projectStateFilter = 'active'\" ng-model=\"Ctrl.projectStateFilter\">\n" +
     "                <option value=\"active\" selected=\"true\">Active</option>\n" +
     "                <option value=\"archived\">Archived</option>\n" +
+    "                <option value=\"trashed\">Trashed</option>\n" +
     "                <option value=\"all\">All</option>\n" +
     "            </select>\n" +
     "        </td>\n" +
     "    </tr>\n" +
     "    </tbody>\n" +
     "</table>\n" +
-    "<div id=\"project_tables\">\n" +
-    "    <table id=\"project_table\">\n" +
+    "<div id=\"project_tables\" >\n" +
+    "    <table id=\"project_table\" style=\"width:100%\">\n" +
     "        <thead>\n" +
     "        <tr style=\"border:1px solid gray;background:lightgrey;\">\n" +
     "            <th></th>\n" +
     "            <th>Date</th>\n" +
     "            <th>Project Summary</th>\n" +
     "            <th>Task Person</th>\n" +
-    "            <th>Urgency</th>\n" +
     "            <th>Action Required</th>\n" +
     "            <th>Action Completed</th>\n" +
     "            <th>Notes</th>\n" +
-    "            <th  ng-if=\"Ctrl.user.isAdmin\">Archive</th>\n" +
+    "            <th><i class=\"glyphicon glyphicon-fire\"></i> </th>\n" +
+    "            <th  ng-if=\"Ctrl.user.isAdmin\"><i class=\"glyphicon glyphicon-trash\"></i></th>\n" +
     "        </tr>\n" +
     "        </thead>\n" +
     "        <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.activeProjects\" class=\"list\">\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'active') || (Ctrl.projectStateFilter == 'all')\"\n" +
     "            ng-repeat=\"project in Ctrl.activeProjects | filter:{'deleted_at':null}\"\n" +
     "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
-    "            <td class=\"myHandle\"><div  style=\"width:15px;height:15px;background:black;\"></div></td>\n" +
+    "            <td class=\"myHandle\"><i class=\"glyphicon glyphicon-move\"></i></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
     "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
-    "            <td ng-style=\"{'background-color':'hsla('+ Ctrl.getPriorityGradient()[$index]+',100%,50%,1)'}\">{{project.tasks[0].prority}}</td>\n" +
     "            <td>{{project.tasks[0].deliverable}}</td>\n" +
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
-    "            <td>{{project.comments[0].comment}}</td>\n" +
-    "            <td ng-if=\"Ctrl.user.isAdmin\"><input type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
+    "            <td> <button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}}</td>\n" +
+    "            <td ng-style=\"{'background-color':'hsla('+ Ctrl.getPriorityGradient()[$index]+',100%,50%,1)'}\">{{project.tasks[0].prority}}</td>\n" +
+    "            <td ng-if=\"Ctrl.user.isAdmin\"><input  class=\"btn btn-sm btn-warning\" type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
     "        </tr>\n" +
     "        <tbody/>\n" +
     "        <tbody>\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'archived') || (Ctrl.projectStateFilter == 'all')\"\n" +
+    "            ng-repeat=\"project in Ctrl.projects | filter: {'state':'0','deleted_at':null} | orderBy:'order_by'\"\n" +
+    "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "            <td><div  style=\"width:15px;height:15px;background:transparent;\"></div></td>\n" +
+    "            <td>{{project.created_at}}</td>\n" +
+    "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
+    "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
+    "            <td>{{project.tasks[0].deliverable}}</td>\n" +
+    "            <td>{{project.tasks[0].delivered}}</td>\n" +
+    "            <td><button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}} </td>\n" +
+    "            <td ng-style=\"{'background-color':'grey'}\"></td>\n" +
+    "            <td ng-if=\"Ctrl.user.isAdmin\">\n" +
+    "                <button class=\"btn btn-xs btn-danger\"  type=\"button\" ng-click=\"Ctrl.trashProject(project)\">     <i class=\"glyphicon glyphicon-remove-circle\"></i></button>\n" +
+    "                <button class=\"btn btn-xs btn-success\"  type=\"button\" ng-click=\"Ctrl.activateProject(project)\"> <i class=\" glyphicon glyphicon-check\"></i></button>\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "        </tbody>\n" +
+    "        <tbody>\n" +
+    "        <tr ng-if=\"(Ctrl.projectStateFilter == 'trashed') || (Ctrl.projectStateFilter == 'all')\"\n" +
     "            ng-repeat=\"project in Ctrl.projects | filter: {'deleted_at':''}\"\n" +
     "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
     "            <td><div  style=\"width:15px;height:15px;background:transparent;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
     "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
-    "            <td ng-style=\"{'background-color':'grey'}\"><div style=\"color:transparent;\">urgency</div></td>\n" +
     "            <td>{{project.tasks[0].deliverable}}</td>\n" +
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
-    "            <td>{{project.comments[0].comment}}</td>\n" +
-    "            <td ng-if=\"Ctrl.user.isAdmin\"><input disabled=\"true\" type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
+    "            <td><button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}} </td>\n" +
+    "            <td ng-style=\"{'background-color':'black'}\"></td>\n" +
+    "            <td ng-if=\"Ctrl.user.isAdmin\">\n" +
+    "                <button class=\"btn btn-xs btn-danger\"  type=\"button\" ng-click=\"Ctrl.deleteProject(project)\" ><i class=\"glyphicon glyphicon-remove-circle\"></i></button>\n" +
+    "                <button class=\"btn btn-xs btn-success\"  type=\"button\" ng-click=\"Ctrl.restoreProject(project)\" ><i class=\" glyphicon glyphicon-check\"></i></button>\n" +
+    "            </td>\n" +
     "        </tr>\n" +
     "        </tbody>\n" +
     "    </table>\n" +

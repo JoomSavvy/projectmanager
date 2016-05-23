@@ -228,6 +228,10 @@ class ProjectsAPIController extends AppBaseController
 
         $projects = $this->projectsRepository->update($input, $id);
 
+       //Mail::send($view,$data,function($message){
+       //    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+       //});
+
         return $this->sendResponse($projects->toArray(), 'Projects updated successfully');
     }
 
@@ -275,11 +279,33 @@ class ProjectsAPIController extends AppBaseController
         $projects = $this->projectsRepository->find($id);
 
         if (empty($projects)) {
-            return Response::json(ResponseUtil::makeError('Projects not found'), 400);
+            return Response::json(ResponseUtil::makeError('Project not found'), 400);
         }
 
         $projects->delete();
 
-        return $this->sendResponse($id, 'Projects deleted successfully');
+        return $this->sendResponse($projects, 'Project archived successfully');
+    }
+    
+    public function forceDestroy($id){
+        $projects = $this->projectsRepository->withTrashed(true)->find($id);
+
+        if(empty($projects)){
+            return Response::json(ResponseUtil::makeError('Project not found'),400);
+        }
+
+        $projects->forceDelete();
+
+        return $this->sendResponse($projects,'Project deleted successfully');
+    }
+    
+    public function restore($id){
+        $projects = $this->projectsRepository->withTrashed(true)->find($id);
+
+        //$projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','tasks','tasks.assignee'])->find($id);
+        
+        $projects->restore();
+        
+        return $this->sendResponse($projects,'Project Restored');
     }
 }

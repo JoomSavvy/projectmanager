@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 /**
  * @SWG\Definition(
  *      definition="Comments",
@@ -58,7 +59,8 @@ class Comments extends Model
 
     public $fillable = [
         'comment',
-        'project_id'
+        'project_id',
+        'user_id'
     ];
 
     /**
@@ -82,6 +84,31 @@ class Comments extends Model
     ];
     
     public function projects(){
-        return $this->belongsTo('Projects');
+        return $this->belongsTo('App\Models\Projects');
+    }
+
+    protected function notifyBob(Comments $comment){
+
+        $username = Auth::user()->name;
+        $mail_view = 'emails.events.comment';
+
+        $mailvars['bobs_email'] = 'joseph.cardwell@joomsavvy.com';
+        $mailvars['bobs_name'] = 'Robert Hollenshead';
+        $mailvars['from_name'] = 'Project Management System';
+        $mailvars['from_email'] = 'noreply@zaptodo.com';
+        $mailvars['subject'] = 'New Note on Project Manager';
+
+        $project_summary = $comment->projects()->getRelated()->first()['summary'];
+        $data = [
+            'comment'=>$comment->attributes['comment'],
+            'timestamp'=>$comment->attributes['created_at'],
+            'project_summary'=>$project_summary,
+            'username'=>$username
+        ];
+
+        Mail::send($mail_view,$data,function($message) use ($mailvars){
+            $message->from($mailvars['from_email'],$mailvars['from_name']);
+            $message->to($mailvars['bobs_email'],$mailvars['bobs_name'])->subject($mailvars['subject']);
+        });
     }
 }
