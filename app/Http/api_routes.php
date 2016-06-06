@@ -21,6 +21,8 @@
 
 
 Route::resource('projects', 'ProjectsAPIController');
+Route::resource('files','FilesAPIController');
+
 Route::delete('projects/{id}/hard','ProjectsAPIController@forceDestroy');
 Route::put('projects/{id}/restore','ProjectsAPIController@restore');
 

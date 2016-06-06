@@ -1,0 +1,62 @@
+[
+  {
+    "fieldInput": "id:increments",
+    "htmlType": "text",
+    "validations": "",
+    "searchable": false,
+    "fillable": false,
+    "primary": true,
+    "inForm": false,
+    "inIndex": false
+  },
+  {
+    "fieldInput": "comment_id:integer",
+    "htmlType":"number",
+    "validations":"",
+    "searchable":false,
+    "fillable":false,
+    "primary":false,
+    "inForm":false,
+    "inIndex":true
+  },
+  {
+    "fieldInput": "created_at:timestamp",
+    "htmlType": "date",
+    "validations": "",
+    "searchable": false,
+    "fillable": false,
+    "primary": false,
+    "inForm": false,
+    "inIndex": false
+  },
+  {
+    "fieldInput": "updated_at:timestamp",
+    "htmlType": "date",
+    "validations": "",
+    "searchable": false,
+    "fillable": false,
+    "primary": false,
+    "inForm": false,
+    "inIndex": false
+  },
+  {
+    "fieldInput": "created_by:integer",
+    "htmlType": "text",
+    "validations": "",
+    "searchable": false,
+    "fillable": false,
+    "primary": false,
+    "inForm": false,
+    "inIndex": false
+  },
+  {
+    "fieldInput": "hash:string",
+    "htmlType": "text",
+    "validations": "",
+    "searchable": false,
+    "fillable": true,
+    "primary": false,
+    "inForm": false,
+    "inIndex": false
+  }
+]

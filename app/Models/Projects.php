@@ -84,4 +84,8 @@ class Projects extends Model
     public function taskuser(){
         return $this->hasManyThrough('App\Models\Users','App\Models\Tasks');
     }
+
+    public function files(){
+        return $this->hasManythrough('App\Models\Files','App\Models\Comments');
+    }
 }

@@ -4,6 +4,7 @@ angular.module( 'app.project', [
     'resources.projects',
     'resources.tasks',
     'resources.comments',
+    'resources.files',
     'ui.router'
 ])
 

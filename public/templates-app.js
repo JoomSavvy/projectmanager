@@ -1,4 +1,4 @@
-angular.module('templates-app', ['auth/login/template.tpl.html', 'auth/logout/template.tpl.html', 'auth/setpassword/template.tpl.html', 'project/item/template.tpl.html', 'project/items/notesmodal.tpl.html', 'project/items/template.tpl.html', 'user/item/template.tpl.html', 'user/items/template.tpl.html']);
+angular.module('templates-app', ['auth/login/template.tpl.html', 'auth/logout/template.tpl.html', 'auth/setpassword/template.tpl.html', 'project/item/template.tpl.html', 'project/items/addfile.modals.tpl.html', 'project/items/commentfiles.modals.tpl.html', 'project/items/notesmodal.tpl.html', 'project/items/projectfiles.modals.tpl.html', 'project/items/template.tpl.html', 'user/item/template.tpl.html', 'user/items/template.tpl.html']);
 
 angular.module("auth/login/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("auth/login/template.tpl.html",
@@ -240,6 +240,18 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "</div>");
 }]);
 
+angular.module("project/items/addfile.modals.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("project/items/addfile.modals.tpl.html",
+    "");
+}]);
+
+angular.module("project/items/commentfiles.modals.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("project/items/commentfiles.modals.tpl.html",
+    "notesfiles.modals.tpl.html show the list of files for a note\n" +
+    "\n" +
+    "");
+}]);
+
 angular.module("project/items/notesmodal.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/items/notesmodal.tpl.html",
     "<div>\n" +
@@ -262,6 +274,66 @@ angular.module("project/items/notesmodal.tpl.html", []).run(["$templateCache", f
     "                <td>{{comment.comment}}</td>\n" +
     "            </tr>\n" +
     "            <tr ng-if=\"!ModalCtrl.comments.length > 0\">\n" +
+    "                <td colspan=\"2\">No Comments or Notes For This Project</td>\n" +
+    "            </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-footer\">\n" +
+    "        <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">OK</button>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("project/items/projectfiles.modals.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("project/items/projectfiles.modals.tpl.html",
+    "<div>\n" +
+    "    <div class=\"modal-header\">\n" +
+    "        <h3 class=\"modal-title\">Project Files</h3>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-body\">\n" +
+    "\n" +
+    "        <table style=\"width:100%;\">\n" +
+    "            <thead>\n" +
+    "            <tr>\n" +
+    "                <th>Note Information</th>\n" +
+    "                <th>Note Files</th>\n" +
+    "            </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-if=\"pfModalCtrl.project.comments.length > 0\" ng-repeat=\"comment in pfModalCtrl.project.comments\"  ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "                <td ng-init=\"comment.showAddFile = false\">\n" +
+    "                    Created {{comment.created_at}} by {{ (pfModalCtrl.users | filter:{id:comment.user_id})[0].name }}<br/>\n" +
+    "                    <p>Text: {{comment.comment}}</p>\n" +
+    "                </td>\n" +
+    "                <td>\n" +
+    "                    <div  ng-if=\"!comment.showAddFile\">\n" +
+    "                        <button class=\"btn btn-xs btn-success\"\n" +
+    "                                ng-click=\"comment.showAddFile = true\">Add New Note File</button>\n" +
+    "                        <ul>\n" +
+    "                            <li ng-if=\"comment.files.length > 0\" ng-repeat=\"file in comment.files\"><a ng-href=\"/api/v1/files/{{file.id}}\" target=\"blank\">{{file.filename}}</a>\n" +
+    "                                {{pfModalCtrl.project.comments.length}}\n" +
+    "                                <button class=\"btn btn-danger btn-xs\" ng-click=\"pfModalCtrl.deleteFile(file.id)\"><i class=\"glyphicon glyphicon-remove\"></i></button>\n" +
+    "                            </li>\n" +
+    "                            <li ng-if=\"!comment.files.length > 0\" >No files for this note.</li>\n" +
+    "                        </ul>\n" +
+    "                    </div>\n" +
+    "\n" +
+    "                    <div>\n" +
+    "                        <div class=\"col-12\">\n" +
+    "                            <div ng-if=\"comment.showAddFile\">\n" +
+    "                                Select File:  <input type=\"file\" file-reader=\"comment\" />\n" +
+    "                            </div>\n" +
+    "                        </div>\n" +
+    "                        <div class=\"col-12\">\n" +
+    "                            <button ng-if=\"comment.showAddFile\" class=\"btn btn-primary\" type=\"button\" ng-click=\"pfModalCtrl.save(comment)\">Save</button>\n" +
+    "                            <button ng-if=\"comment.showAddFile\" class=\"btn btn-primary\" type=\"button\" ng-click=\"comment.showAddFile = false\">Cancel</button>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                </td>\n" +
+    "            </tr>\n" +
+    "            <tr ng-if=\"!pfModalCtrl.project.comments.length > 0\">\n" +
     "                <td colspan=\"2\">No Comments or Notes For This Project</td>\n" +
     "            </tr>\n" +
     "            </tbody>\n" +
@@ -405,6 +477,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <th>Action Completed</th>\n" +
     "            <th>Notes</th>\n" +
     "            <th><i class=\"glyphicon glyphicon-fire\"></i> </th>\n" +
+    "            <th><i class=\"glyphicon glyphicon-file\"></i> </th>\n" +
     "            <th  ng-if=\"Ctrl.user.isAdmin\"><i class=\"glyphicon glyphicon-trash\"></i></th>\n" +
     "        </tr>\n" +
     "        </thead>\n" +
@@ -420,6 +493,11 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
     "            <td> <button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}}</td>\n" +
     "            <td ng-style=\"{'background-color':'hsla('+ Ctrl.getPriorityGradient()[$index]+',100%,50%,1)'}\">{{project.tasks[0].prority}}</td>\n" +
+    "            <td>\n" +
+    "                <button class=\"btn-rimary btn btn-xs\" ng-click=\"Ctrl.openProjectFilesModal(project)\">\n" +
+    "                    <i class=\"glyphicon glyphicon-file\"></i>\n" +
+    "                </button>\n" +
+    "            </td>\n" +
     "            <td ng-if=\"Ctrl.user.isAdmin\"><input  class=\"btn btn-sm btn-warning\" type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
     "        </tr>\n" +
     "        <tbody/>\n" +
@@ -435,6 +513,11 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
     "            <td><button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}} </td>\n" +
     "            <td ng-style=\"{'background-color':'grey'}\"></td>\n" +
+    "            <td>\n" +
+    "                <button class=\"btn-rimary btn btn-xs\" ng-click=\"Ctrl.openProjectFilesModal(project)\">\n" +
+    "                    <i class=\"glyphicon glyphicon-file\"></i>\n" +
+    "                </button>\n" +
+    "            </td>\n" +
     "            <td ng-if=\"Ctrl.user.isAdmin\">\n" +
     "                <button class=\"btn btn-xs btn-danger\"  type=\"button\" ng-click=\"Ctrl.trashProject(project)\">     <i class=\"glyphicon glyphicon-remove-circle\"></i></button>\n" +
     "                <button class=\"btn btn-xs btn-success\"  type=\"button\" ng-click=\"Ctrl.activateProject(project)\"> <i class=\" glyphicon glyphicon-check\"></i></button>\n" +
@@ -453,6 +536,11 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "            <td>{{project.tasks[0].delivered}}</td>\n" +
     "            <td><button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}} </td>\n" +
     "            <td ng-style=\"{'background-color':'black'}\"></td>\n" +
+    "            <td>\n" +
+    "                <button class=\"btn-rimary btn btn-xs\" ng-click=\"Ctrl.openProjectFilesModal(project)\">\n" +
+    "                    <i class=\"glyphicon glyphicon-file\"></i>\n" +
+    "                </button>\n" +
+    "            </td>\n" +
     "            <td ng-if=\"Ctrl.user.isAdmin\">\n" +
     "                <button class=\"btn btn-xs btn-danger\"  type=\"button\" ng-click=\"Ctrl.deleteProject(project)\" ><i class=\"glyphicon glyphicon-remove-circle\"></i></button>\n" +
     "                <button class=\"btn btn-xs btn-success\"  type=\"button\" ng-click=\"Ctrl.restoreProject(project)\" ><i class=\" glyphicon glyphicon-check\"></i></button>\n" +

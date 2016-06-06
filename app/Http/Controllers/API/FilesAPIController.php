@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateProjectsAPIRequest;
-use App\Http\Requests\API\UpdateProjectsAPIRequest;
-//use App\Models\Projects;
-use App\Models\Tasks;
-use App\Models\Projects;
-use App\Repositories\ProjectsRepository;
+use App\Http\Requests\API\CreateFilesAPIRequest;
+use App\Http\Requests\API\UpdateFilesAPIRequest;
+use App\Models\Files;
+use App\Repositories\FilesRepository;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
@@ -16,19 +15,19 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 /**
- * Class ProjectsController
+ * Class CommentsController
  * @package App\Http\Controllers\API
  */
 
-class ProjectsAPIController extends AppBaseController
+class FilesAPIController extends AppBaseController
 {
-    /** @var  ProjectsRepository */
-    private $projectsRepository;
+    /** @var  FilesRepository */
+    private $filesRepository;
 
-    public function __construct(ProjectsRepository $projectsRepo)
+    public function __construct(FilesRepository $filesRepo)
     {
-        $this->middleware('jwt.auth');
-        $this->projectsRepository = $projectsRepo;
+        $this->middleware('jwt.auth',['except'=>['show']]);
+        $this->filesRepository = $filesRepo;
     }
 
     /**
@@ -36,10 +35,10 @@ class ProjectsAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/projects",
-     *      summary="Get a listing of the Projects.",
-     *      tags={"Projects"},
-     *      description="Get all Projects",
+     *      path="/files",
+     *      summary="Get a listing of the Files.",
+     *      tags={"Files"},
+     *      description="Get all Files",
      *      produces={"application/json"},
      *      @SWG\Response(
      *          response=200,
@@ -53,7 +52,7 @@ class ProjectsAPIController extends AppBaseController
      *              @SWG\Property(
      *                  property="data",
      *                  type="array",
-     *                  @SWG\Items(ref="#/definitions/Projects")
+     *                  @SWG\Items(ref="#/definitions/Files")
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -65,29 +64,29 @@ class ProjectsAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->projectsRepository->pushCriteria(new RequestCriteria($request));
-        $this->projectsRepository->pushCriteria(new LimitOffsetCriteria($request));
-        $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','comments.files','tasks','tasks.assignee'])->all();
+        $this->filesRepository->pushCriteria(new RequestCriteria($request));
+        $this->filesRepository->pushCriteria(new LimitOffsetCriteria($request));
+        $files = $this->filesRepository->all();
 
-        return $this->sendResponse($projects->toArray(), 'Projects retrieved successfully');
+        return $this->sendResponse($files->toArray(), 'Files retrieved successfully');
     }
 
     /**
-     * @param CreateProjectsAPIRequest $request
+     * @param CreateFilesAPIRequest $request
      * @return Response
      *
      * @SWG\Post(
-     *      path="/projects",
-     *      summary="Store a newly created Projects in storage",
-     *      tags={"Projects"},
-     *      description="Store Projects",
+     *      path="/files",
+     *      summary="Store a newly created Files in storage",
+     *      tags={"Files"},
+     *      description="Store Files",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Projects that should be stored",
+     *          description="Files that should be stored",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Projects")
+     *          @SWG\Schema(ref="#/definitions/Files")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -100,7 +99,7 @@ class ProjectsAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Projects"
+     *                  ref="#/definitions/Files"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -110,13 +109,15 @@ class ProjectsAPIController extends AppBaseController
      *      )
      * )
      */
-    public function store(CreateProjectsAPIRequest $request)
+    public function store(CreateFilesAPIRequest $request)
     {
         $input = $request->all();
 
-        $projects = $this->projectsRepository->create($input);
+        $files = $this->filesRepository->create($input);
 
-        return $this->sendResponse($projects->toArray(), 'Projects saved successfully');
+        $files::notify($files);
+
+        return $this->sendResponse($files->toArray(), 'Files saved successfully');
     }
 
     /**
@@ -124,14 +125,14 @@ class ProjectsAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/projects/{id}",
-     *      summary="Display the specified Projects",
-     *      tags={"Projects"},
-     *      description="Get Projects",
+     *      path="/files/{id}",
+     *      summary="Display the specified Files",
+     *      tags={"Files"},
+     *      description="Get Files",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Projects",
+     *          description="id of Files",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -147,7 +148,7 @@ class ProjectsAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Projects"
+     *                  ref="#/definitions/Files"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -159,30 +160,32 @@ class ProjectsAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Projects $projects */
-        $projects = $this->projectsRepository->with(['tasks','comments'])->find($id);
+        /** @var Files $files */
+        $file = $this->filesRepository->download($id);
 
-        if (empty($projects)) {
-            return Response::json(ResponseUtil::makeError('Projects not found'), 400);
+        if (empty($file)) {
+            return Response::json(ResponseUtil::makeError('Files not found'), 400);
         }
-
-        return $this->sendResponse($projects->toArray(), 'Projects retrieved successfully');
+        
+        return Response::download($file['path'],$file['filename'],['Content-Type'=>$file['mimetype']]);
+        //return (new Response($file, 200))
+        //    ->header('Content-Type', $file->mimeType());
     }
 
     /**
      * @param int $id
-     * @param UpdateProjectsAPIRequest $request
+     * @param UpdateFilesAPIRequest $request
      * @return Response
      *
      * @SWG\Put(
-     *      path="/projects/{id}",
-     *      summary="Update the specified Projects in storage",
-     *      tags={"Projects"},
-     *      description="Update Projects",
+     *      path="/files/{id}",
+     *      summary="Update the specified Files in storage",
+     *      tags={"Files"},
+     *      description="Update Files",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Projects",
+     *          description="id of Files",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -190,9 +193,9 @@ class ProjectsAPIController extends AppBaseController
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Projects that should be updated",
+     *          description="Files that should be updated",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Projects")
+     *          @SWG\Schema(ref="#/definitions/Files")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -205,7 +208,7 @@ class ProjectsAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Projects"
+     *                  ref="#/definitions/Files"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -215,24 +218,20 @@ class ProjectsAPIController extends AppBaseController
      *      )
      * )
      */
-    public function update($id, UpdateProjectsAPIRequest $request)
+    public function update($id, UpdateFilesAPIRequest $request)
     {
         $input = $request->all();
 
-        /** @var Projects $projects */
-        $projects = $this->projectsRepository->find($id);
+        /** @var Files $files */
+        $files = $this->filesRepository->find($id);
 
-        if (empty($projects)) {
-            return Response::json(ResponseUtil::makeError('Projects not found'), 400);
+        if (empty($files)) {
+            return Response::json(ResponseUtil::makeError('Files not found'), 400);
         }
 
-        $projects = $this->projectsRepository->update($input, $id);
+        $files = $this->filesRepository->update($input, $id);
 
-       //Mail::send($view,$data,function($message){
-       //    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
-       //});
-
-        return $this->sendResponse($projects->toArray(), 'Projects updated successfully');
+        return $this->sendResponse($files->toArray(), 'Files updated successfully');
     }
 
     /**
@@ -240,14 +239,14 @@ class ProjectsAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Delete(
-     *      path="/projects/{id}",
-     *      summary="Remove the specified Projects from storage",
-     *      tags={"Projects"},
-     *      description="Delete Projects",
+     *      path="/files/{id}",
+     *      summary="Remove the specified Files from storage",
+     *      tags={"Files"},
+     *      description="Delete Files",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Projects",
+     *          description="id of Files",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -275,37 +274,15 @@ class ProjectsAPIController extends AppBaseController
      */
     public function destroy($id)
     {
-        /** @var Projects $projects */
-        $projects = $this->projectsRepository->find($id);
+        /** @var Files $files */
+        $files = $this->filesRepository->find($id);
 
-        if (empty($projects)) {
-            return Response::json(ResponseUtil::makeError('Project not found'), 400);
+        if (empty($files)) {
+            return Response::json(ResponseUtil::makeError('Files not found'), 400);
         }
 
-        $projects->delete();
+        $files->delete();
 
-        return $this->sendResponse($projects, 'Project archived successfully');
-    }
-    
-    public function forceDestroy($id){
-        $projects = $this->projectsRepository->withTrashed(true)->find($id);
-
-        if(empty($projects)){
-            return Response::json(ResponseUtil::makeError('Project not found'),400);
-        }
-
-        $projects->forceDelete();
-
-        return $this->sendResponse($projects,'Project deleted successfully');
-    }
-    
-    public function restore($id){
-        $projects = $this->projectsRepository->withTrashed(true)->find($id);
-
-        //$projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','tasks','tasks.assignee'])->find($id);
-        
-        $projects->restore();
-        
-        return $this->sendResponse($projects,'Project Restored');
+        return $this->sendResponse($id, 'Files deleted successfully');
     }
 }

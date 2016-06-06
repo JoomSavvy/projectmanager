@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 /**
  * @SWG\Definition(
- *      definition="Comments",
+ *      definition="Files",
  *      required={},
  *      @SWG\Property(
  *          property="id",
@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Mail;
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="project_id",
- *          description="project_id",
+ *          property="comment_id",
+ *          description="comment_id",
  *          type="integer",
  *          format="int32"
  *      ),
@@ -41,26 +41,29 @@ use Illuminate\Support\Facades\Mail;
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="comment",
- *          description="comment",
+ *          property="hash",
+ *          description="hash",
  *          type="string"
  *      )
  * )
  */
-class Comments extends Model
+class Files extends Model
 {
     use SoftDeletes;
 
-    public $table = 'comments';
+    public $table = 'files';
     
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at','created_at','updated_at'];
 
 
     public $fillable = [
-        'comment',
-        'project_id',
-        'user_id'
+        'file',
+        'file_id',
+        'user_id',
+        'comment_id',
+        'hash',
+        'filename'
     ];
 
     /**
@@ -69,9 +72,10 @@ class Comments extends Model
      * @var array
      */
     protected $casts = [
-        'project_id' => 'integer',
+        'id'=>'integer',
+        'file_id' => 'integer',
         'user_id' => 'integer',
-        'comment' => 'string'
+        'hash' => 'string'
     ];
 
     /**
@@ -89,35 +93,30 @@ class Comments extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function projects(){
-        return $this->belongsTo('App\Models\Projects');
+    public function comments(){
+        return $this->belongsTo('App\Models\Comments');
     }
 
 
-    /**
-     * Returns files attached to this note.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function files(){
-        return $this->hasMany('App\Models\Files','comment_id');
-    }
-
-    protected function notifyBob(Comments $comment){
+    // @todo Move to base model or interface.
+    protected function notify(Files $file){
 
         $username = Auth::user()->name;
-        $mail_view = 'emails.events.comment';
+        $mail_view = 'emails.events.file';
 
+        
+        // so from here, we use visibility and subscription to define recipients for file events.
+        /*
         $mailvars['bobs_email'] = 'joseph.cardwell@joomsavvy.com';
         $mailvars['bobs_name'] = 'Robert Hollenshead';
         $mailvars['from_name'] = 'Project Management System';
         $mailvars['from_email'] = 'noreply@zaptodo.com';
         $mailvars['subject'] = 'New Note on Project Manager';
 
-        $project_summary = $comment->projects()->getRelated()->first()['summary'];
+        $project_summary = $file->projects()->getRelated()->first()['summary'];
         $data = [
-            'comment'=>$comment->attributes['comment'],
-            'timestamp'=>$comment->attributes['created_at'],
+            'file'=>$file->attributes['file'],
+            'timestamp'=>$file->attributes['created_at'],
             'project_summary'=>$project_summary,
             'username'=>$username
         ];
@@ -126,5 +125,7 @@ class Comments extends Model
             $message->from($mailvars['from_email'],$mailvars['from_name']);
             $message->to($mailvars['bobs_email'],$mailvars['bobs_name'])->subject($mailvars['subject']);
         });
+        
+        */
     }
 }
