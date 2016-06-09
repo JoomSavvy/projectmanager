@@ -10,11 +10,20 @@ angular.module( 'app.project.item', [])
             projectsRestService, tasksRestService, commentsRestService
         ) {
             this.users = users;
+            console.log(users);
             //this.user = userSessionService.get();
             this.project = project;
 
             this.user = userSessionService.get();
-    
+
+            //var unassignedUsers = angular.copy(this.users);
+            var unassignedUsers = this.users;
+
+            //this.unassignedUsers = angular.copy(this.users).filter(function(user) {});
+
+            var diff = _.difference(_.map(unassignedUsers, "id"), _.map(this.project.users, "id"));
+            this.unassignedUsers = _.filter(unassignedUsers, function(obj) { return diff.indexOf(obj.id) >= 0; });
+
             this.newTaskRow = {
                 project_id:this.project.id
             };
@@ -60,6 +69,14 @@ angular.module( 'app.project.item', [])
                         };
                     }));
                 }));
+            }
+
+            this.updateUserAdd = function(user){
+                projectsRestService.updateUserAdd({id:this.project.id},user);
+            };
+            
+            this.updateUserDelete = function(user){
+                projectsRestService.updateUserDelete({id:this.project.id},user);
             }
         }
     )

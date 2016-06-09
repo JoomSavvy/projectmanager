@@ -52,7 +52,7 @@ angular.module( 'app.project', [
                 },
                 usersRestService:'usersRestService',
                 users:function(usersRestService){
-                    return usersRestService.query();
+                    return usersRestService.query().$promise;
                 }
             }
         });

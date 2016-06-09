@@ -18,6 +18,14 @@ angular.module( 'resources.projects',['ngResource'] ).factory('projectsRestServi
             restore:{
                 method:'PUT',
                 url:appUrl+'projects/:id/restore'
+            },
+            updateUserAdd:{
+                method:'PUT',
+                url:appUrl+'projects/:id/user/add'
+            },
+            updateUserDelete:{
+                method:'PUT',
+                url:appUrl+'projects/:id/user/delete'
             }
             
         }

@@ -9,8 +9,13 @@ angular.module( 'app.project.items', [])
             projects, users, projectsRestService,tasksRestService,commentsRestService, filesRestService
         ) {
 
+            this.users = users.slice(0);
             this.showNewProjectRow = false;
-            this.newRow = {};
+            this.newRow = {
+                unassignedUsers : this.users,
+                users:[]
+            };
+
             this.projects = projects;
 
             this.activeProjects = $filter('filter')(
@@ -21,11 +26,13 @@ angular.module( 'app.project.items', [])
                 }
             );
 
-            this.users = users;
 
             this.user = $rootScope.currentUser;
 
-            this.newProject = {};
+            this.newProject = {
+                unassignedUsers : this.users
+            };
+            
             this.newTask = {};
             this.newComment = {};
 
@@ -134,7 +141,8 @@ angular.module( 'app.project.items', [])
                 var project = {
                     description:this.newRow.description,
                     order_by:this.newRow.order,
-                    summary:this.newRow.summary
+                    summary:this.newRow.summary,
+                    users:this.newRow.users
                 };
 
                 var task = {
@@ -148,13 +156,16 @@ angular.module( 'app.project.items', [])
                     created_by:this.user.id
                 };
 
-                this.newRow = {};
+
                 projectsRestService.save(project).$promise.then(function(data){
                     task.project_id = data.id;
                     comment.project_id = data.id;
                     tasksRestService.save(task).$promise.then(function(){
                         commentsRestService.save(comment).$promise.then(function(){
                             $scope.updateProjects();
+                            this.newRow = {
+                                unassignedUsers : this.users
+                            };
                         });
                     });
 

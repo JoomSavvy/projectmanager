@@ -88,4 +88,8 @@ class Projects extends Model
     public function files(){
         return $this->hasManythrough('App\Models\Files','App\Models\Comments');
     }
+
+    public function users(){
+        return $this->belongsToMany('App\Models\Users','projects_users','project_id','user_id');
+    }
 }

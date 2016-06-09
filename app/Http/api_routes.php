@@ -25,8 +25,10 @@ Route::resource('files','FilesAPIController');
 
 Route::delete('projects/{id}/hard','ProjectsAPIController@forceDestroy');
 Route::put('projects/{id}/restore','ProjectsAPIController@restore');
+Route::put('projects/{id}/user/add','ProjectsAPIController@useradd');
+Route::put('projects/{id}/user/delete','ProjectsAPIController@userdelete');
 
-Route::resource('tasks', 'TasksAPIController');
+Route::resource('tasks', 'TasksAPIController'); 
 
 Route::resource('comments', 'CommentsAPIController');
 

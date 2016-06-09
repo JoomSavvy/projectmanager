@@ -146,7 +146,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "    <h4>Project Summary: {{Ctrl.project.summary}}</h4>\n" +
     "    <h4>Project Description:</h4>\n" +
     "    <p>{{Ctrl.project.description}}</p>\n" +
-    "    <div>\n" +
+    "    <div class=\"row\">\n" +
     "        <h4>Tasks</h4>\n" +
     "        <table>\n" +
     "            <thead>\n" +
@@ -167,7 +167,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                    </div>\n" +
     "                </td>\n" +
     "            </tr>\n" +
-    "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"2\"> No Tasks Associated With This Project</td></tr>\n" +
+    "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"4\"> No Tasks Associated With This Project</td></tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
     "        <div ng-if=\"Ctrl.user.isAdmin\" id=\"add_taskrow_container\">\n" +
@@ -194,10 +194,38 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                <input class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTaskRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewTaskRow()\"/>\n" +
     "            </div>\n" +
     "        </div>\n" +
-    "\n" +
-    "\n" +
     "    </div>\n" +
-    "    <div>\n" +
+    "\n" +
+    "    <div class=\"row\">\n" +
+    "        <div class=\"well well-sm col-md-6\">\n" +
+    "            <h4>Visibility</h4>\n" +
+    "            <div class=\"panel panel-default\">\n" +
+    "                <div class=\"panel-heading\">Available Users:</div>\n" +
+    "                <div class=\"panel-body\">\n" +
+    "                    <a ng-repeat=\"user in Ctrl.unassignedUsers\" href=\"\"\n" +
+    "                       ng-click=\"\n" +
+    "                        Ctrl.project.users.push(user);\n" +
+    "                        Ctrl.unassignedUsers.splice(Ctrl.unassignedUsers.indexOf(user),1);\n" +
+    "                        Ctrl.updateUserAdd(user);\">\n" +
+    "                        {{user.name}}<span ng-if=\"!$last\">,</span></a>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div class=\"panel panel-default\">\n" +
+    "                <div class=\"panel-heading\">Assigned Users:</div>\n" +
+    "                <div class=\"panel-body\">\n" +
+    "                    <a ng-repeat=\"user in Ctrl.project.users\" href=\"\"\n" +
+    "                       ng-click=\"\n" +
+    "               Ctrl.unassignedUsers.push(user);\n" +
+    "               Ctrl.project.users.splice(Ctrl.project.users.indexOf(user),1);\n" +
+    "               Ctrl.updateUserDelete(user);\">\n" +
+    "                        {{user.name}}<span ng-if=\"!$last\">,</span></a>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "\n" +
+    "    <div class=\"row\">\n" +
     "        <h4>Notes</h4>\n" +
     "        <table >\n" +
     "            <thead>\n" +
@@ -214,7 +242,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                <td>{{comment.comment}}</td>\n" +
     "            </tr>\n" +
     "            <tr ng-if=\"!Ctrl.project.comments.length > 0\">\n" +
-    "                <td colspan=\"2\">No Comments or Notes For This Project</td>\n" +
+    "                <td colspan=\"3\">No Comments or Notes For This Project</td>\n" +
     "            </tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
@@ -433,6 +461,31 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "                <input id=\"newProjectSummary\" ng-model=\"Ctrl.newRow.summary\" type=\"text\" placeholder=\"summary\" class=\"form-control input-md\">\n" +
     "            </div>\n" +
     "        </div>\n" +
+    "        <div class=\"form-group\">\n" +
+    "            <label class=\"col-md-4 control-label\">Visibility</label>\n" +
+    "            <div class=\"col-md-4 \" >\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-heading\">Available Users:</div>\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <a ng-repeat=\"user in Ctrl.newRow.unassignedUsers\" href=\"\"\n" +
+    "                           ng-click=\"\n" +
+    "                       Ctrl.newRow.users.push(user);\n" +
+    "                       Ctrl.newRow.unassignedUsers.splice(Ctrl.newRow.unassignedUsers.indexOf(user),1);\">\n" +
+    "                            {{user.name}}<span ng-if=\"!$last\">,</span></a>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"panel panel-default\">\n" +
+    "                    <div class=\"panel-heading\">Assigned Users:</div>\n" +
+    "                    <div class=\"panel-body\">\n" +
+    "                        <a ng-repeat=\"user in Ctrl.newRow.users\" href=\"\"\n" +
+    "                           ng-click=\"\n" +
+    "                       Ctrl.newRow.unassignedUsers.push(user);\n" +
+    "                       Ctrl.newRow.users.splice(Ctrl.newRow.users.indexOf(user),1);\">\n" +
+    "                            {{user.name}}<span ng-if=\"!$last\">,</span></a>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "        <!-- Textarea -->\n" +
     "        <div class=\"form-group\">\n" +
     "            <label class=\"col-md-4 control-label\" for=\"newProjectDescription\">Full Description</label>\n" +
@@ -482,25 +535,44 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </tr>\n" +
     "        </thead>\n" +
     "        <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.activeProjects\" class=\"list\">\n" +
-    "        <tr ng-if=\"(Ctrl.projectStateFilter == 'active') || (Ctrl.projectStateFilter == 'all')\"\n" +
+    "        <tr ng-if=\"(Ctrl.projectStateFilter == 'active') || (Ctrl.projectStateFilter == 'all') || (Ctrl.user.isAdmin==0)\"\n" +
     "            ng-repeat=\"project in Ctrl.activeProjects | filter:{'deleted_at':null}\"\n" +
     "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
-    "            <td class=\"myHandle\"><i class=\"glyphicon glyphicon-move\"></i></div></td>\n" +
+    "            <td class=\"myHandle\">\n" +
+    "                <i class=\"glyphicon glyphicon-move\"></i>\n" +
+    "            </td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
-    "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
-    "            <td>{{project.tasks[0].assignee.name || 'Not Assigned'}}</td>\n" +
-    "            <td>{{project.tasks[0].deliverable}}</td>\n" +
-    "            <td>{{project.tasks[0].delivered}}</td>\n" +
-    "            <td> <button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\"><i class=\"glyphicon glyphicon-zoom-in\"></i></button> {{project.comments[0].comment}}</td>\n" +
-    "            <td ng-style=\"{'background-color':'hsla('+ Ctrl.getPriorityGradient()[$index]+',100%,50%,1)'}\">{{project.tasks[0].prority}}</td>\n" +
+    "            <td>\n" +
+    "                <a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a>\n" +
+    "            </td>\n" +
+    "            <td>\n" +
+    "                {{project.tasks[0].assignee.name || 'Not Assigned'}}\n" +
+    "            </td>\n" +
+    "            <td>\n" +
+    "                {{project.tasks[0].deliverable}}\n" +
+    "            </td>\n" +
+    "            <td>\n" +
+    "                {{project.tasks[0].delivered}}\n" +
+    "            </td>\n" +
+    "            <td>\n" +
+    "                <button class=\"btn-primary btn btn-xs\" ng-click=\"Ctrl.openNotesModal(project.comments)\">\n" +
+    "                    <i class=\"glyphicon glyphicon-zoom-in\"></i>\n" +
+    "                </button>\n" +
+    "                {{project.comments[0].comment}}\n" +
+    "            </td>\n" +
+    "            <td ng-style=\"{'background-color':'hsla('+ Ctrl.getPriorityGradient()[$index]+',100%,50%,1)'}\">\n" +
+    "                {{project.tasks[0].prority}}\n" +
+    "            </td>\n" +
     "            <td>\n" +
     "                <button class=\"btn-rimary btn btn-xs\" ng-click=\"Ctrl.openProjectFilesModal(project)\">\n" +
     "                    <i class=\"glyphicon glyphicon-file\"></i>\n" +
     "                </button>\n" +
     "            </td>\n" +
-    "            <td ng-if=\"Ctrl.user.isAdmin\"><input  class=\"btn btn-sm btn-warning\" type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/></td>\n" +
+    "            <td ng-if=\"Ctrl.user.isAdmin\">\n" +
+    "                <input  class=\"btn btn-sm btn-warning\" type=\"button\" ng-click=\"Ctrl.archiveProject(project)\" value=\"X\"/>\n" +
+    "            </td>\n" +
     "        </tr>\n" +
-    "        <tbody/>\n" +
+    "        </tbody>\n" +
     "        <tbody>\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'archived') || (Ctrl.projectStateFilter == 'all')\"\n" +
     "            ng-repeat=\"project in Ctrl.projects | filter: {'state':'0','deleted_at':null} | orderBy:'order_by'\"\n" +

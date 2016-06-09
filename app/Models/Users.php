@@ -88,12 +88,11 @@ class Users extends Model
     ];
     
     public function projects(){
-        return $this->belongsTo('App\Models\Projects');
+        return $this->belongsToMany('App\Models\Projects','projects_users','user_id','project_id');
     }
 
     //public function tasks(){
     //    return $this->hasMany('App\Models\Tasks','assigned_to');
     //}
-    
-   
+
 }

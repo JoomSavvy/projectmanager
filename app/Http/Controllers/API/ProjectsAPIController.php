@@ -7,6 +7,7 @@ use App\Http\Requests\API\UpdateProjectsAPIRequest;
 //use App\Models\Projects;
 use App\Models\Tasks;
 use App\Models\Projects;
+use App\Models\Users;
 use App\Repositories\ProjectsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -14,6 +15,7 @@ use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use InfyOm\Generator\Utils\ResponseUtil;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ProjectsController
@@ -67,7 +69,16 @@ class ProjectsAPIController extends AppBaseController
     {
         $this->projectsRepository->pushCriteria(new RequestCriteria($request));
         $this->projectsRepository->pushCriteria(new LimitOffsetCriteria($request));
-        $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','comments.files','tasks','tasks.assignee'])->all();
+        $user = Auth::user();
+        if($user->isAdmin){
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->all();
+        }else{
+            //$usersRespository = new \App\Repositories\UsersRepository();
+
+            $project_keys = Users::find($user->id)->projects->pluck('id');
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->findWhereIn('id',$project_keys->toArray());
+        }
+
 
         return $this->sendResponse($projects->toArray(), 'Projects retrieved successfully');
     }
@@ -114,8 +125,11 @@ class ProjectsAPIController extends AppBaseController
     {
         $input = $request->all();
 
-        $projects = $this->projectsRepository->create($input);
+        $current_user = Auth::user();
+        $projects = $this->projectsRepository->create($input)->users()->save($current_user);
+        //$user = Auth::user();
 
+        //Users::find($user->id)->projects()->save();
         return $this->sendResponse($projects->toArray(), 'Projects saved successfully');
     }
 
@@ -160,7 +174,7 @@ class ProjectsAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Projects $projects */
-        $projects = $this->projectsRepository->with(['tasks','comments'])->find($id);
+        $projects = $this->projectsRepository->with(['tasks','comments','users'])->find($id);
 
         if (empty($projects)) {
             return Response::json(ResponseUtil::makeError('Projects not found'), 400);
@@ -222,6 +236,12 @@ class ProjectsAPIController extends AppBaseController
         /** @var Projects $projects */
         $projects = $this->projectsRepository->find($id);
 
+        foreach($request['users'] as $user){
+            $projects->users()->attach($user['id']);
+        }
+
+
+
         if (empty($projects)) {
             return Response::json(ResponseUtil::makeError('Projects not found'), 400);
         }
@@ -235,6 +255,45 @@ class ProjectsAPIController extends AppBaseController
         return $this->sendResponse($projects->toArray(), 'Projects updated successfully');
     }
 
+
+    public function userAdd($id, UpdateProjectsAPIRequest $request)
+    {
+        $input = $request->all();
+
+        /** @var Projects $projects */
+        $projects = $this->projectsRepository->find($id);
+
+        if (empty($projects)) {
+            return Response::json(ResponseUtil::makeError('Project not found'), 400);
+        }
+
+        $projects->users()->attach(
+            $request['id']
+        );
+
+        return $this->sendResponse(1, 'Projects updated successfully');
+    }
+
+
+    public function userDelete($id, UpdateProjectsAPIRequest $request)
+    {
+        $input = $request->all();
+
+        /** @var Projects $projects */
+        $projects = $this->projectsRepository->find($id);
+
+        if (empty($projects)) {
+            return Response::json(ResponseUtil::makeError('Projects not found'), 400);
+        }
+
+
+        $projects->users()->detach(
+            $request['id']
+        );
+
+
+        return $this->sendResponse(1, 'Projects updated successfully');
+    }
     /**
      * @param int $id
      * @return Response
