@@ -11,10 +11,16 @@ angular.module( 'app.project.items', [])
 
             this.users = users.slice(0);
             this.showNewProjectRow = false;
-            this.newRow = {
-                unassignedUsers : this.users,
-                users:[]
+            
+
+            this.resetNewRow = function(){
+                this.newRow = {
+                    unassignedUsers : users.slice(0),
+                    users:[]
+                };
             };
+
+            this.resetNewRow();
 
             this.projects = projects;
 
@@ -130,12 +136,6 @@ angular.module( 'app.project.items', [])
 
 
             this.saveNewRow = function(){
-                //this.newRow.description //project
-                //this.newRow.assignee //task
-                //this.newRow.order //project
-                //this.newRow.deliverable //task
-                //this.newRow.delivered //task
-                //this.newRow.comment //comment
 
                 //save project, save task with project id, save comment with project id
                 var project = {
@@ -163,16 +163,12 @@ angular.module( 'app.project.items', [])
                     tasksRestService.save(task).$promise.then(function(){
                         commentsRestService.save(comment).$promise.then(function(){
                             $scope.updateProjects();
-                            this.newRow = {
-                                unassignedUsers : this.users
-                            };
+                            this.resetNewRow();
                         });
                     });
 
                 });
-
-
-
+                
                 this.showNewProjectRow = false;
             };
 

@@ -121,4 +121,8 @@ class Tasks extends Model
     public function assignee(){ 
         return $this->belongsTo('App\Models\Users','assigned_to');
     }
+
+    public function users(){
+        return $this->belongsToMany('App\Models\Users','users_tasks','task_id','user_id');
+    }
 }
