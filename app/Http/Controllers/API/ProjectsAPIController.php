@@ -71,12 +71,12 @@ class ProjectsAPIController extends AppBaseController
         $this->projectsRepository->pushCriteria(new LimitOffsetCriteria($request));
         $user = Auth::user();
         if($user->isAdmin){
-            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->all();
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->all();
         }else{
             //$usersRespository = new \App\Repositories\UsersRepository();
 
             $project_keys = Users::find($user->id)->projects->pluck('id');
-            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->findWhereIn('id',$project_keys->toArray());
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->findWhereIn('id',$project_keys->toArray());
         }
 
 
@@ -174,7 +174,7 @@ class ProjectsAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Projects $projects */
-        $projects = $this->projectsRepository->with(['tasks','comments','users'])->find($id);
+        $projects = $this->projectsRepository->with(['tasks','tasks.users','comments','users'])->find($id);
 
         if (empty($projects)) {
             return Response::json(ResponseUtil::makeError('Projects not found'), 400);

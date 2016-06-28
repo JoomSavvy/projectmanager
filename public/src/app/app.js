@@ -1,5 +1,6 @@
 angular.module( 'app', [
         'app.project',
+        'app.config',
         'app.user',
         'app.auth',
         'app.filters',
@@ -11,7 +12,9 @@ angular.module( 'app', [
         'ui.sortable',
         'ui.bootstrap',
         'services.user.session',
-        'satellizer'
+        'satellizer',
+        'resources.categories',
+        'resources.users'
     ])
     .constant('appUrl', '/api/v1/')
     .config( function config ( $stateProvider, $urlRouterProvider,   $httpProvider,$locationProvider ,$authProvider, $provide) {
@@ -116,7 +119,7 @@ angular.module( 'app', [
         
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
             if ( angular.isDefined( toState.data.pageTitle ) ) {
-                $scope.pageTitle = toState.data.pageTitle + ' | Client Intake' ;
+                $scope.pageTitle = toState.data.pageTitle ;
             }
         });
 
