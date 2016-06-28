@@ -107,10 +107,10 @@ class Files extends Model
         
         // so from here, we use visibility and subscription to define recipients for file events.
         /*
-        $mailvars['bobs_email'] = 'joseph.cardwell@joomsavvy.com';
-        $mailvars['bobs_name'] = 'Robert Hollenshead';
+        $mailvars['rec_email'] = 'joseph.cardwell@joomsavvy.com';
+        $mailvars['rec_name'] = 'Joseph Cardwell';
         $mailvars['from_name'] = 'Project Management System';
-        $mailvars['from_email'] = 'noreply@zaptodo.com';
+        $mailvars['from_email'] = 'noreply@joomsavvy.com.com';
         $mailvars['subject'] = 'New Note on Project Manager';
 
         $project_summary = $file->projects()->getRelated()->first()['summary'];
@@ -123,7 +123,7 @@ class Files extends Model
 
         Mail::send($mail_view,$data,function($message) use ($mailvars){
             $message->from($mailvars['from_email'],$mailvars['from_name']);
-            $message->to($mailvars['bobs_email'],$mailvars['bobs_name'])->subject($mailvars['subject']);
+            $message->to($mailvars['rec_email'],$mailvars['rec_name'])->subject($mailvars['subject']);
         });
         
         */
