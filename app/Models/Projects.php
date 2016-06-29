@@ -49,7 +49,8 @@ class Projects extends Model
         'order_by',
         'summary',
         'user_id',
-        'state'
+        'state',
+        'category_id'
     ];
 
     /**

@@ -205,7 +205,14 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "    <h4>Project Description:</h4>\n" +
     "    <p>{{Ctrl.project.description}}</p>\n" +
     "    <div class=\"row\">\n" +
+    "        <select ng-model=\"Ctrl.project.category_id\" ng-change=\"Ctrl.updateProject();\">\n" +
+    "            <option>Select Category</option>\n" +
+    "            <option ng-repeat=\"category in Ctrl.categories\" value=\"{{category.id}}\" selected=\"{{category.id == Ctrl.project.category_id}}\">{{category.text}}</option>\n" +
+    "        </select>\n" +
+    "    </div>\n" +
+    "    <div class=\"row\">\n" +
     "        <h4>Tasks</h4>\n" +
+<<<<<<< HEAD
     "        <table width=\"100%;\">\n" +
     "            <thead>\n" +
     "            <th>Created On</th>\n" +
@@ -239,6 +246,8 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"4\"> No Tasks Associated With This Project</td></tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
+=======
+>>>>>>> 2b51fa2462c48eb20e0a77cb5e6da83a31cb64d2
     "        <div ng-if=\"Ctrl.user.isAdmin\" id=\"add_taskrow_container\">\n" +
     "            <table ng-if=\"Ctrl.showingNewTaskRow\" id=\"add_project_form\">\n" +
     "                <thead>\n" +
@@ -259,10 +268,45 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                </tbody>\n" +
     "            </table>\n" +
     "            <div id=\"action_buttons\">\n" +
-    "                <input class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewTaskRow\" type=\"button\" value=\"Add Task\" ng-click=\"Ctrl.showingNewTaskRow=true\"/>\n" +
-    "                <input class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTaskRow\" type=\"button\" value=\"Commit\" ng-click=\"Ctrl.saveNewTaskRow()\"/>\n" +
+    "                <button class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewTaskRow\" alue=\"Add Task\" ng-click=\"Ctrl.showingNewTaskRow=true\">Add Task</button>\n" +
+    "                <button class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTaskRow\"  ng-click=\"Ctrl.saveNewTaskRow()\">Save</button>\n" +
+    "                <button class=\"btn btn-caution\" ng-if=\"Ctrl.showingNewTaskRow\"  ng-click=\"Ctrl.newTaskRow={project_id:Ctrl.project.id};Ctrl.showingNewTask=false\">Cancel</button>\n" +
     "            </div>\n" +
     "        </div>\n" +
+    "        <table width=\"100%;\">\n" +
+    "            <thead>\n" +
+    "            <th>Created On</th>\n" +
+    "            <th width=\"60%\">Assigned To</th>\n" +
+    "            <th>Deliverable</th>\n" +
+    "            <th>Delivered</th>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-if=\"Ctrl.project.tasks.length > 0\" ng-repeat=\"task in Ctrl.project.tasks\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "                <td>{{task.created_at}}</td>\n" +
+    "                <td>\n" +
+    "                    <ul class=\"btn-group\">\n" +
+    "                        <li class=\"list-unstyled badge badge-info\" ng-repeat=\"user in task.users\">\n" +
+    "                                {{user.name }}\n" +
+    "                                 <span class=\"btn btn-xs glyphicon glyphicon-remove\" ng-click=\"Ctrl.removeTaskUser(task,user)\"> </span>\n" +
+    "                        </li>\n" +
+    "                    </ul>\n" +
+    "\n" +
+    "                    <button class=\"btn btn-xs glyphicon glyphicon-plus\" ng-click=\"Ctrl.openTaskAdduserModal(task)\"></button>\n" +
+    "                </td>\n" +
+    "\n" +
+    "                <td>{{task.deliverable}}</td>\n" +
+    "                <td>\n" +
+    "                    <div ng-if=\"task.delivered != ''\">{{task.delivered}}</div>\n" +
+    "                    <div ng-if=\"task.delivered == ''\">\n" +
+    "                        <input type=\"text\" ng-model=\"Ctrl.newTaskDelivered[task.id]\"/>\n" +
+    "                        <i ng-click=\"Ctrl.updateTask(task)\" class=\"glyphicon glyphicon-check\"></i>\n" +
+    "                    </div>\n" +
+    "                </td>\n" +
+    "            </tr>\n" +
+    "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"4\"> No Tasks Associated With This Project</td></tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"row\">\n" +

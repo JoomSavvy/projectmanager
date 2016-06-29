@@ -53,6 +53,10 @@ angular.module( 'app.project', [
                 usersRestService:'usersRestService',
                 users:function(usersRestService){
                     return usersRestService.query().$promise;
+                },
+                categoriesRestService:'categoriesRestService',
+                categories:function(categoriesRestService,$stateParams){
+                    return categoriesRestService.query().$promise;
                 }
             }
         });

@@ -6,11 +6,12 @@ angular.module( 'app.project.item', [])
     .controller( 'ProjectItemCtrl',
         function ProjectItemController(
             $scope, $filter, $stateParams,$rootScope,$uibModal,
-            project, users, userSessionService,
+            project, users, categories, userSessionService,
             projectsRestService, tasksRestService, commentsRestService
         ) {
             this.users = users;
             console.log(users);
+            this.categories = categories;
             //this.user = userSessionService.get();
             this.project = project;
 
@@ -38,6 +39,12 @@ angular.module( 'app.project.item', [])
             this.showingNewTaskRow = false;
             this.showingNewCommentRow = false;
 
+            this.updateProject = function(){
+                projectsRestService.update(this.project).$promise.then(angular.bind(function(result){
+                    //this.project = result;
+                    return angular.noop();
+                }));
+            };
 
             this.updateTask = function(task){
                 task.delivered = this.newTaskDelivered[task.id];
