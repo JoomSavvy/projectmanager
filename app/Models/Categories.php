@@ -56,6 +56,7 @@ class Categories extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'category_id'=>'integer',
         'text' => 'string'
     ];
 
