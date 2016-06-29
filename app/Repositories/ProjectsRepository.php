@@ -21,6 +21,4 @@ class ProjectsRepository extends BaseRepository
     {
         return Projects::class;
     }
-
-   
 }
