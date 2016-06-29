@@ -3,9 +3,9 @@
  */
 
 angular.module( 'resources.comments',['ngResource'] ).factory('commentsRestService', function ($resource, appUrl) {
-    return $resource(appUrl+'comments/:commentId',
+    return $resource(appUrl+'comments/:id',
         {
-            commentId:'@comment_id'
+            id:'@id'
         },
         {
             update:{

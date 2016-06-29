@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateTasksAPIRequest;
-use App\Http\Requests\API\UpdateTasksAPIRequest;
-use App\Models\Tasks;
-use App\Repositories\TasksRepository;
+use App\Http\Requests\API\CreateCategoriesAPIRequest;
+use App\Http\Requests\API\UpdateCategoriesAPIRequest;
+use App\Models\Categories;
+use App\Repositories\CategoriesRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
@@ -14,19 +14,19 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
 /**
- * Class TasksController
+ * Class CategoriesController
  * @package App\Http\Controllers\API
  */
 
-class TasksAPIController extends AppBaseController
+class CategoriesAPIController extends AppBaseController
 {
-    /** @var  TasksRepository */
-    private $tasksRepository;
+    /** @var  CategoriesRepository */
+    private $categoriesRepository;
 
-    public function __construct(TasksRepository $tasksRepo)
+    public function __construct(CategoriesRepository $categoriesRepo)
     {
         $this->middleware('jwt.auth');
-        $this->tasksRepository = $tasksRepo;
+        $this->categoriesRepository = $categoriesRepo;
     }
 
     /**
@@ -34,10 +34,10 @@ class TasksAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/tasks",
-     *      summary="Get a listing of the Tasks.",
-     *      tags={"Tasks"},
-     *      description="Get all Tasks",
+     *      path="/categories",
+     *      summary="Get a listing of the Categories.",
+     *      tags={"Categories"},
+     *      description="Get all Categories",
      *      produces={"application/json"},
      *      @SWG\Response(
      *          response=200,
@@ -51,7 +51,7 @@ class TasksAPIController extends AppBaseController
      *              @SWG\Property(
      *                  property="data",
      *                  type="array",
-     *                  @SWG\Items(ref="#/definitions/Tasks")
+     *                  @SWG\Items(ref="#/definitions/Categories")
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -63,29 +63,29 @@ class TasksAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->tasksRepository->pushCriteria(new RequestCriteria($request));
-        $this->tasksRepository->pushCriteria(new LimitOffsetCriteria($request));
-        $tasks = $this->tasksRepository->with(['assignee','users'])->all();
+        $this->categoriesRepository->pushCriteria(new RequestCriteria($request));
+        $this->categoriesRepository->pushCriteria(new LimitOffsetCriteria($request));
+        $categories = $this->categoriesRepository->all();
 
-        return $this->sendResponse($tasks->toArray(), 'Tasks retrieved successfully');
+        return $this->sendResponse($categories->toArray(), 'Categories retrieved successfully');
     }
 
     /**
-     * @param CreateTasksAPIRequest $request
+     * @param CreateCategoriesAPIRequest $request
      * @return Response
      *
      * @SWG\Post(
-     *      path="/tasks",
-     *      summary="Store a newly created Tasks in storage",
-     *      tags={"Tasks"},
-     *      description="Store Tasks",
+     *      path="/categories",
+     *      summary="Store a newly created Categories in storage",
+     *      tags={"Categories"},
+     *      description="Store Categories",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Tasks that should be stored",
+     *          description="Categories that should be stored",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Tasks")
+     *          @SWG\Schema(ref="#/definitions/Categories")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -98,7 +98,7 @@ class TasksAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Tasks"
+     *                  ref="#/definitions/Categories"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -108,13 +108,13 @@ class TasksAPIController extends AppBaseController
      *      )
      * )
      */
-    public function store(CreateTasksAPIRequest $request)
+    public function store(CreateCategoriesAPIRequest $request)
     {
         $input = $request->all();
 
-        $tasks = $this->tasksRepository->create($input);
+        $categories = $this->categoriesRepository->create($input);
 
-        return $this->sendResponse($tasks->toArray(), 'Tasks saved successfully');
+        return $this->sendResponse($categories->toArray(), 'Categories saved successfully');
     }
 
     /**
@@ -122,14 +122,14 @@ class TasksAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/tasks/{id}",
-     *      summary="Display the specified Tasks",
-     *      tags={"Tasks"},
-     *      description="Get Tasks",
+     *      path="/categories/{id}",
+     *      summary="Display the specified Categories",
+     *      tags={"Categories"},
+     *      description="Get Categories",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Tasks",
+     *          description="id of Categories",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -145,7 +145,7 @@ class TasksAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Tasks"
+     *                  ref="#/definitions/Categories"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -157,30 +157,30 @@ class TasksAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Tasks $tasks */
-        $tasks = $this->tasksRepository->find($id);
+        /** @var Categories $categories */
+        $categories = $this->categoriesRepository->find($id);
 
-        if (empty($tasks)) {
-            return Response::json(ResponseUtil::makeError('Tasks not found'), 400);
+        if (empty($categories)) {
+            return Response::json(ResponseUtil::makeError('Categories not found'), 400);
         }
 
-        return $this->sendResponse($tasks->toArray(), 'Tasks retrieved successfully');
+        return $this->sendResponse($categories->toArray(), 'Categories retrieved successfully');
     }
 
     /**
      * @param int $id
-     * @param UpdateTasksAPIRequest $request
+     * @param UpdateCategoriesAPIRequest $request
      * @return Response
      *
      * @SWG\Put(
-     *      path="/tasks/{id}",
-     *      summary="Update the specified Tasks in storage",
-     *      tags={"Tasks"},
-     *      description="Update Tasks",
+     *      path="/categories/{id}",
+     *      summary="Update the specified Categories in storage",
+     *      tags={"Categories"},
+     *      description="Update Categories",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Tasks",
+     *          description="id of Categories",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -188,9 +188,9 @@ class TasksAPIController extends AppBaseController
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Tasks that should be updated",
+     *          description="Categories that should be updated",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Tasks")
+     *          @SWG\Schema(ref="#/definitions/Categories")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -203,7 +203,7 @@ class TasksAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Tasks"
+     *                  ref="#/definitions/Categories"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -213,72 +213,35 @@ class TasksAPIController extends AppBaseController
      *      )
      * )
      */
-    public function update($id, UpdateTasksAPIRequest $request)
+    public function update($id, UpdateCategoriesAPIRequest $request)
     {
         $input = $request->all();
 
-        /** @var Tasks $tasks */
-        $tasks = $this->tasksRepository->find($id);
+        /** @var Categories $categories */
+        $categories = $this->categoriesRepository->find($id);
 
-        if (empty($tasks)) {
-            return Response::json(ResponseUtil::makeError('Tasks not found'), 400);
+        if (empty($categories)) {
+            return Response::json(ResponseUtil::makeError('Categories not found'), 400);
         }
 
-        $tasks = $this->tasksRepository->update($input, $id);
+        $categories = $this->categoriesRepository->update($input, $id);
 
-        return $this->sendResponse($tasks->toArray(), 'Tasks updated successfully');
+        return $this->sendResponse($categories->toArray(), 'Categories updated successfully');
     }
 
-    public function userAdd($id, UpdateTasksAPIRequest $request)
-    {
-        $input = $request->all();
-
-        /** @var Tasks $task */
-        $task = $this->tasksRepository->find($id);
-
-        if (empty($task)) {
-            return Response::json(ResponseUtil::makeError('Task not found'), 400);
-        }
-
-        $task->users()->attach(
-            $request['id']
-        );
-
-        return $this->sendResponse(1, 'Task updated successfully');
-    }
-    
-    public function userDelete($id, UpdateTasksAPIRequest $request)
-    {
-        $input = $request->all();
-
-        /** @var Tasks $task */
-        $task = $this->tasksRepository->find($id);
-
-        if (empty($task)) {
-            return Response::json(ResponseUtil::makeError('Task not found'), 400);
-        }
-
-        $task->users()->detach(
-            $request['id']
-        );
-
-
-        return $this->sendResponse(1, 'Task updated successfully');
-    }
-    
     /**
      * @param int $id
      * @return Response
      *
      * @SWG\Delete(
-     *      path="/tasks/{id}",
-     *      summary="Remove the specified Tasks from storage",
-     *      tags={"Tasks"},
-     *      description="Delete Tasks",
+     *      path="/categories/{id}",
+     *      summary="Remove the specified Categories from storage",
+     *      tags={"Categories"},
+     *      description="Delete Categories",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Tasks",
+     *          description="id of Categories",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -306,15 +269,15 @@ class TasksAPIController extends AppBaseController
      */
     public function destroy($id)
     {
-        /** @var Tasks $tasks */
-        $tasks = $this->tasksRepository->find($id);
+        /** @var Categories $categories */
+        $categories = $this->categoriesRepository->find($id);
 
-        if (empty($tasks)) {
-            return Response::json(ResponseUtil::makeError('Tasks not found'), 400);
+        if (empty($categories)) {
+            return Response::json(ResponseUtil::makeError('Categories not found'), 400);
         }
 
-        $tasks->delete();
+        $categories->delete();
 
-        return $this->sendResponse($id, 'Tasks deleted successfully');
+        return $this->sendResponse($id, 'Categories deleted successfully');
     }
 }
