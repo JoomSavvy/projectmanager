@@ -62,7 +62,8 @@ class Projects extends Model
         'id'=>'integer',
         'description' => 'string',
         'order_by'=>'integer',
-        'state'=>'integer'
+        'state'=>'integer',
+        'category_id'=>'integer'
     ];
 
     /**

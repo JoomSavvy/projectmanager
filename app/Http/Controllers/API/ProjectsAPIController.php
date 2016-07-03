@@ -71,12 +71,12 @@ class ProjectsAPIController extends AppBaseController
         $this->projectsRepository->pushCriteria(new LimitOffsetCriteria($request));
         $user = Auth::user();
         if($user->isAdmin){
-            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->all();
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->all();
         }else{
             //$usersRespository = new \App\Repositories\UsersRepository();
 
             $project_keys = Users::find($user->id)->projects->pluck('id');
-            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->findWhereIn('id',$project_keys->toArray());
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->findWhereIn('id',$project_keys->toArray());
         }
 
 
@@ -233,26 +233,36 @@ class ProjectsAPIController extends AppBaseController
     {
         $input = $request->all();
 
-        /** @var Projects $projects */
-        $projects = $this->projectsRepository->find($id);
+        /** @var Projects $project */
+        $project = $this->projectsRepository->find($id);
+        $currentUsers = $project->users()->get();
 
+        /**
+         * todo:
+         *          move to repository
+         *          move to another method.
+         **/
+
+        // parse the incoming users against the existing users and sync
         foreach($request['users'] as $user){
-            $projects->users()->attach($user['id']);
+            if(array_key_exists($user->id, $currentUsers->toArray())){
+                $project->users()->attach($user['id']);
+            }
         }
 
 
 
-        if (empty($projects)) {
-            return Response::json(ResponseUtil::makeError('Projects not found'), 400);
+        if (empty($project)) {
+            return Response::json(ResponseUtil::makeError('Project not found'), 400);
         }
 
-        $projects = $this->projectsRepository->update($input, $id);
+        $project = $this->projectsRepository->update($input, $id);
 
        //Mail::send($view,$data,function($message){
        //    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
        //});
 
-        return $this->sendResponse($projects->toArray(), 'Projects updated successfully');
+        return $this->sendResponse($project->toArray(), 'Projects updated successfully');
     }
 
 
