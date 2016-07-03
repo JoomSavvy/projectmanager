@@ -245,7 +245,7 @@ class ProjectsAPIController extends AppBaseController
 
         // parse the incoming users against the existing users and sync
         foreach($request['users'] as $user){
-            if(array_key_exists($user->id, $currentUsers->toArray())){
+            if(array_key_exists($user['id'], $currentUsers->toArray())){
                 $project->users()->attach($user['id']);
             }
         }
