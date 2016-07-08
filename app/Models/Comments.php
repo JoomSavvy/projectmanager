@@ -111,11 +111,10 @@ class Comments extends Model
         $mailvars['rec_email'] = 'joseph.cardwell@joomsavvy.com';
         $mailvars['rec_name'] = 'Joseph Cardwell';
         $mailvars['from_name'] = 'Project Management System';
-        $mailvars['from_email'] = 'noreply@joomsavvy.com.com';
+        $mailvars['from_email'] = 'noreply@joomsavvy.com';
         $mailvars['subject'] = 'New Note on Project Manager';
 
         $project_summary = $comment->projects()->getRelated()->first()['summary'];
-        
         $data = [
             'comment'=>$comment->attributes['comment'],
             'timestamp'=>$comment->attributes['created_at'],

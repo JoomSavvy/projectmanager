@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateProjectsAPIRequest;
 use App\Http\Requests\API\UpdateProjectsAPIRequest;
-//use App\Models\Projects;
 use App\Models\Tasks;
 use App\Models\Projects;
 use App\Models\Users;
@@ -72,12 +71,12 @@ class ProjectsAPIController extends AppBaseController
         $user = Auth::user();
         
         if($user->isAdmin){
-            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->all();
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->all();
         }else{
             //$usersRespository = new \App\Repositories\UsersRepository();
 
             $project_keys = Users::find($user->id)->projects->pluck('id');
-            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee'])->findWhereIn('id',$project_keys->toArray());
+            $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->findWhereIn('id',$project_keys->toArray());
         }
 
         return $this->sendResponse($projects->toArray(), 'Projects retrieved successfully');
