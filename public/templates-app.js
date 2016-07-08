@@ -205,13 +205,21 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "    <h4>Project Description:</h4>\n" +
     "    <p>{{Ctrl.project.description}}</p>\n" +
     "    <div class=\"row\">\n" +
-    "        <select ng-model=\"Ctrl.project.category_id\" ng-change=\"Ctrl.updateProject();\">\n" +
-    "            <option>Select Category</option>\n" +
-    "            <option ng-repeat=\"category in Ctrl.categories\" value=\"{{category.id}}\" selected=\"{{category.id == Ctrl.project.category_id}}\">{{category.text}}</option>\n" +
+    "        <select\n" +
+    "                ng-model=\"Ctrl.project.category_id\"\n" +
+    "                ng-options=\"value.id as value.text for (key, value) in Ctrl.categories\"\n" +
+    "                ng-change=\"Ctrl.updateProject();\">\n" +
+    "            <option value=\"\" disabled selected>Please Select</option>\n" +
     "        </select>\n" +
     "    </div>\n" +
     "    <div class=\"row\">\n" +
-    "        <h4>Tasks</h4>\n" +
+    "        <div class='row'>\n" +
+    "            <h4 class=\"col-sm-12\">\n" +
+    "                Tasks\n" +
+    "                <button class=\"btn btn-primary btn-xs\" ng-if=\"!Ctrl.showingNewTaskRow\"   ng-click=\"Ctrl.showingNewTaskRow=true\">Add Task</button>\n" +
+    "            </h4>\n" +
+    "\n" +
+    "        </div>\n" +
     "        <div ng-if=\"Ctrl.user.isAdmin\" id=\"add_taskrow_container\">\n" +
     "            <table ng-if=\"Ctrl.showingNewTaskRow\" id=\"add_project_form\">\n" +
     "                <thead>\n" +
@@ -232,7 +240,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                </tbody>\n" +
     "            </table>\n" +
     "            <div id=\"action_buttons\">\n" +
-    "                <button class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewTaskRow\" alue=\"Add Task\" ng-click=\"Ctrl.showingNewTaskRow=true\">Add Task</button>\n" +
+    "\n" +
     "                <button class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTaskRow\"  ng-click=\"Ctrl.saveNewTaskRow()\">Save</button>\n" +
     "                <button class=\"btn btn-caution\" ng-if=\"Ctrl.showingNewTaskRow\"  ng-click=\"Ctrl.newTaskRow={project_id:Ctrl.project.id};Ctrl.showingNewTask=false\">Cancel</button>\n" +
     "            </div>\n" +

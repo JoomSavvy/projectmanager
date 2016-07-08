@@ -40,7 +40,7 @@ angular.module( 'app.project.item', [])
             this.showingNewCommentRow = false;
 
             this.updateProject = function(){
-                projectsRestService.update(this.project).$promise.then(angular.bind(function(result){
+                projectsRestService.update({id:this.project.id},this.project).$promise.then(angular.bind(function(result){
                     //this.project = result;
                     return angular.noop();
                 }));
@@ -49,7 +49,7 @@ angular.module( 'app.project.item', [])
             this.updateTask = function(task){
                 task.delivered = this.newTaskDelivered[task.id];
                 tasksRestService.update({id:task.id},task).$promise.then(function(result){
-                    this.newTaskDelivered[task.id]='';
+                    this.newTaskDelivered[task.id]=null;
                 });
             };
 

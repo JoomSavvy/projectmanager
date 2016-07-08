@@ -79,8 +79,4 @@ class Categories extends Model
         return $this->belongsTo('App\Models\Projects');
     }
 
-
-
-
-
 }
