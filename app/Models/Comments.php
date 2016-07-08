@@ -115,6 +115,7 @@ class Comments extends Model
         $mailvars['subject'] = 'New Note on Project Manager';
 
         $project_summary = $comment->projects()->getRelated()->first()['summary'];
+        
         $data = [
             'comment'=>$comment->attributes['comment'],
             'timestamp'=>$comment->attributes['created_at'],

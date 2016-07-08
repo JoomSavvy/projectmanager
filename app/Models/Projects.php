@@ -93,4 +93,8 @@ class Projects extends Model
     public function users(){
         return $this->belongsToMany('App\Models\Users','projects_users','project_id','user_id');
     }
+    
+    public function timers(){
+        return $this->belongToMany('App\Models\Timers','projects_timers','project_id','timer_id');
+    }
 }

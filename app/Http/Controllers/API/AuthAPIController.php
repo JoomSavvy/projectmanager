@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateCommentsAPIRequest;
-use App\Http\Requests\API\UpdateCommentsAPIRequest;
-use App\Models\Comments;
-use App\Repositories\CommentsRepository;
+//use App\Http\Requests\API\CreateAuthAPIRequest;
+//use App\Http\Requests\API\UpdateAuthAPIRequest;
+//use App\Models\Auth;
+//use App\Repositories\AuthRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;

@@ -70,6 +70,7 @@ class ProjectsAPIController extends AppBaseController
         $this->projectsRepository->pushCriteria(new RequestCriteria($request));
         $this->projectsRepository->pushCriteria(new LimitOffsetCriteria($request));
         $user = Auth::user();
+        
         if($user->isAdmin){
             $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->all();
         }else{
@@ -78,7 +79,6 @@ class ProjectsAPIController extends AppBaseController
             $project_keys = Users::find($user->id)->projects->pluck('id');
             $projects = $this->projectsRepository->orderBy('order_by')->withTrashed(true)->with(['comments','users','comments.files','tasks','tasks.assignee','tasks.users'])->findWhereIn('id',$project_keys->toArray());
         }
-
 
         return $this->sendResponse($projects->toArray(), 'Projects retrieved successfully');
     }

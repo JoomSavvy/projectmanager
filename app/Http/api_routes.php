@@ -21,6 +21,7 @@
 
 
 Route::resource('projects', 'ProjectsAPIController');
+Route::resource('timers', 'TimersAPIController');
 Route::resource('files','FilesAPIController');
 Route::resource('categories','CategoriesAPIController');
 

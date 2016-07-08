@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\Users;
+use App\Models\Timers;
 use InfyOm\Generator\Request\APIRequest;
 
-class CreateUsersAPIRequest extends APIRequest
+class CreateTimersAPIRequest extends APIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,6 @@ class CreateUsersAPIRequest extends APIRequest
      */
     public function rules()
     {
-        return Users::$rules;
+        return Timers::$rules;
     }
 }

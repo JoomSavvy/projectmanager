@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+//use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @SWG\Definition(
@@ -49,11 +49,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *      )
  * )
  */
-class Users extends Model
+class Timers extends Model
 {
     //use SoftDeletes;
 
-    public $table = 'users';
+    public $table = 'timers';
     
 
     //protected $dates = ['deleted_at'];
@@ -61,12 +61,9 @@ class Users extends Model
 
     public $fillable = [
         "id",
-        "name",
-        "email",
-        "password",
-        "isAdmin",
-        "remember_token",
-        "created_at",
+        "date",
+        "start",
+        "end",
         "updated_at"
     ];
 
@@ -88,11 +85,10 @@ class Users extends Model
     ];
     
     public function projects(){
-        return $this->belongsToMany('App\Models\Projects','projects_users','user_id','project_id');
+        return $this->belongsToMany('App\Models\Projects','projects_timers','timer_id','project_id');
     }
 
-    public function tasks(){
-        return $this->belongsToMany('App\Models\Tasks','users_tasks','user_id','task_id');
-    }
-
+   //public function tasks(){
+   //    return $this->belongsToMany('App\Models\Tasks','tasks_timers',timer_id','task_id');
+   //}
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateUsersAPIRequest;
-use App\Http\Requests\API\UpdateUsersAPIRequest;
-use App\Models\Users;
-use App\Repositories\UsersRepository;
+use App\Http\Requests\API\CreateTimersAPIRequest;
+use App\Http\Requests\API\UpdateTimersAPIRequest;
+use App\Models\Timers;
+use App\Repositories\TimersRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
@@ -16,21 +16,21 @@ use Response;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 /**
- * Class UsersController
+ * Class TimersController
  * @package App\Http\Controllers\API
  */
 
-class UsersAPIController extends AppBaseController
+class TimersAPIController extends AppBaseController
 {
     use ResetsPasswords;
 
-    /** @var  UsersRepository */
-    private $usersRepository;
+    /** @var  TimersRepository */
+    private $timersRepository;
 
-    public function __construct(UsersRepository $usersRepo)
+    public function __construct(TimersRepository $timersRepo)
     {
         $this->middleware('jwt.auth');
-        $this->usersRepository = $usersRepo;
+        $this->timersRepository = $timersRepo;
     }
 
     /**
@@ -38,10 +38,10 @@ class UsersAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/users",
-     *      summary="Get a listing of the Users.",
-     *      tags={"Users"},
-     *      description="Get all Users",
+     *      path="/timers",
+     *      summary="Get a listing of the Timers.",
+     *      tags={"Timers"},
+     *      description="Get all Timers",
      *      produces={"application/json"},
      *      @SWG\Response(
      *          response=200,
@@ -55,7 +55,7 @@ class UsersAPIController extends AppBaseController
      *              @SWG\Property(
      *                  property="data",
      *                  type="array",
-     *                  @SWG\Items(ref="#/definitions/Users")
+     *                  @SWG\Items(ref="#/definitions/Timers")
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -67,29 +67,29 @@ class UsersAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->usersRepository->pushCriteria(new RequestCriteria($request));
-        $this->usersRepository->pushCriteria(new LimitOffsetCriteria($request));
-        $users = $this->usersRepository->all();
+        $this->timersRepository->pushCriteria(new RequestCriteria($request));
+        $this->timersRepository->pushCriteria(new LimitOffsetCriteria($request));
+        $timers = $this->timersRepository->all();
 
-        return $this->sendResponse($users->toArray(), 'Users retrieved successfully');
+        return $this->sendResponse($timers->toArray(), 'Timers retrieved successfully');
     }
 
     /**
-     * @param CreateUsersAPIRequest $request
+     * @param CreateTimersAPIRequest $request
      * @return Response
      *
      * @SWG\Post(
-     *      path="/users",
-     *      summary="Store a newly created Users in storage",
-     *      tags={"Users"},
-     *      description="Store Users",
+     *      path="/timers",
+     *      summary="Store a newly created Timers in storage",
+     *      tags={"Timers"},
+     *      description="Store Timers",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Users that should be stored",
+     *          description="Timers that should be stored",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Users")
+     *          @SWG\Schema(ref="#/definitions/Timers")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -102,7 +102,7 @@ class UsersAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Users"
+     *                  ref="#/definitions/Timers"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -112,15 +112,15 @@ class UsersAPIController extends AppBaseController
      *      )
      * )
      */
-    public function store(CreateUsersAPIRequest $request)
+    public function store(CreateTimersAPIRequest $request)
     {
         $input = $request->all();
 
-        $users = $this->usersRepository->create($input);
+        $timers = $this->timersRepository->create($input);
 
         $this->postEmail($request);
 
-        return $this->sendResponse($users->toArray(), 'Users saved successfully');
+        return $this->sendResponse($timers->toArray(), 'Timers saved successfully');
     }
 
     /**
@@ -128,14 +128,14 @@ class UsersAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/users/{id}",
-     *      summary="Display the specified Users",
-     *      tags={"Users"},
-     *      description="Get Users",
+     *      path="/timers/{id}",
+     *      summary="Display the specified Timers",
+     *      tags={"Timers"},
+     *      description="Get Timers",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Users",
+     *          description="id of Timers",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -151,7 +151,7 @@ class UsersAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Users"
+     *                  ref="#/definitions/Timers"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -163,30 +163,30 @@ class UsersAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Users $users */
-        $users = $this->usersRepository->find($id);
+        /** @var Timers $timers */
+        $timers = $this->timersRepository->find($id);
 
-        if (empty($users)) {
-            return Response::json(ResponseUtil::makeError('Users not found'), 400);
+        if (empty($timers)) {
+            return Response::json(ResponseUtil::makeError('Timers not found'), 400);
         }
 
-        return $this->sendResponse($users->toArray(), 'Users retrieved successfully');
+        return $this->sendResponse($timers->toArray(), 'Timers retrieved successfully');
     }
 
     /**
      * @param int $id
-     * @param UpdateUsersAPIRequest $request
+     * @param UpdateTimersAPIRequest $request
      * @return Response
      *
      * @SWG\Put(
-     *      path="/users/{id}",
-     *      summary="Update the specified Users in storage",
-     *      tags={"Users"},
-     *      description="Update Users",
+     *      path="/timers/{id}",
+     *      summary="Update the specified Timers in storage",
+     *      tags={"Timers"},
+     *      description="Update Timers",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Users",
+     *          description="id of Timers",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -194,9 +194,9 @@ class UsersAPIController extends AppBaseController
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Users that should be updated",
+     *          description="Timers that should be updated",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Users")
+     *          @SWG\Schema(ref="#/definitions/Timers")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -209,7 +209,7 @@ class UsersAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Users"
+     *                  ref="#/definitions/Timers"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -219,20 +219,20 @@ class UsersAPIController extends AppBaseController
      *      )
      * )
      */
-    public function update($id, UpdateUsersAPIRequest $request)
+    public function update($id, UpdateTimersAPIRequest $request)
     {
         $input = $request->all();
 
-        /** @var Users $users */
-        $users = $this->usersRepository->find($id);
+        /** @var Timers $timers */
+        $timers = $this->timersRepository->find($id);
 
-        if (empty($users)) {
-            return Response::json(ResponseUtil::makeError('Users not found'), 400);
+        if (empty($timers)) {
+            return Response::json(ResponseUtil::makeError('Timers not found'), 400);
         }
 
-        $users = $this->usersRepository->update($input, $id);
+        $timers = $this->timersRepository->update($input, $id);
 
-        return $this->sendResponse($users->toArray(), 'Users updated successfully');
+        return $this->sendResponse($timers->toArray(), 'Timers updated successfully');
     }
 
     /**
@@ -240,14 +240,14 @@ class UsersAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Delete(
-     *      path="/users/{id}",
-     *      summary="Remove the specified Users from storage",
-     *      tags={"Users"},
-     *      description="Delete Users",
+     *      path="/timers/{id}",
+     *      summary="Remove the specified Timers from storage",
+     *      tags={"Timers"},
+     *      description="Delete Timers",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Users",
+     *          description="id of Timers",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -275,15 +275,15 @@ class UsersAPIController extends AppBaseController
      */
     public function destroy($id)
     {
-        /** @var Users $users */
-        $users = $this->usersRepository->find($id);
+        /** @var Timers $timers */
+        $timers = $this->timersRepository->find($id);
 
-        if (empty($users)) {
-            return Response::json(ResponseUtil::makeError('Users not found'), 400);
+        if (empty($timers)) {
+            return Response::json(ResponseUtil::makeError('Timers not found'), 400);
         }
 
-        $users->delete();
+        $timers->delete();
 
-        return $this->sendResponse($id, 'Users deleted successfully');
+        return $this->sendResponse($id, 'Timers deleted successfully');
     }
 }
