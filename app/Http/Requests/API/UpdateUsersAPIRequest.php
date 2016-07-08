@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\Comments;
+use App\Models\Users;
 use InfyOm\Generator\Request\APIRequest;
 
 class UpdateUsersAPIRequest extends APIRequest

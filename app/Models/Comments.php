@@ -103,15 +103,15 @@ class Comments extends Model
         return $this->hasMany('App\Models\Files','comment_id');
     }
 
-    protected function notifyBob(Comments $comment){
+    protected function notify(Comments $comment){
 
         $username = Auth::user()->name;
         $mail_view = 'emails.events.comment';
 
-        $mailvars['bobs_email'] = 'joseph.cardwell@joomsavvy.com';
-        $mailvars['bobs_name'] = 'Robert Hollenshead';
+        $mailvars['rec_email'] = 'joseph.cardwell@joomsavvy.com';
+        $mailvars['rec_name'] = 'Joseph Cardwell';
         $mailvars['from_name'] = 'Project Management System';
-        $mailvars['from_email'] = 'noreply@zaptodo.com';
+        $mailvars['from_email'] = 'noreply@joomsavvy.com';
         $mailvars['subject'] = 'New Note on Project Manager';
 
         $project_summary = $comment->projects()->getRelated()->first()['summary'];
@@ -124,7 +124,7 @@ class Comments extends Model
 
         Mail::send($mail_view,$data,function($message) use ($mailvars){
             $message->from($mailvars['from_email'],$mailvars['from_name']);
-            $message->to($mailvars['bobs_email'],$mailvars['bobs_name'])->subject($mailvars['subject']);
+            $message->to($mailvars['rec_email'],$mailvars['rec_name'])->subject($mailvars['subject']);
         });
     }
 }

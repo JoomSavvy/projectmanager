@@ -50,9 +50,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * )
  */
 class Users extends Model
-{
+{    
     //use SoftDeletes;
 
+    /**
+     * List of fields not to return on eloquent->all()
+     * @var array 
+     */
+    protected $hidden=['password','remember_token'];
+    
     public $table = 'users';
     
 
