@@ -49,22 +49,23 @@ use Eloquent as Model;
  *      )
  * )
  */
-class Timers extends Model
+class Times extends Model
 {
     //use SoftDeletes;
 
-    public $table = 'timers';
-    
+    public $table = 'times';
 
-    //protected $dates = ['deleted_at'];
+
+    protected $dates = ['created_at', 'updated_at', 'start_at','end_at'];
 
 
     public $fillable = [
-        "id",
         "date",
-        "start",
-        "end",
-        "updated_at"
+        "start_at",
+        "end_at",
+        "updated_at",
+        "description",
+        'project_id'
     ];
 
     /**
@@ -85,10 +86,10 @@ class Timers extends Model
     ];
     
     public function projects(){
-        return $this->belongsToMany('App\Models\Projects','projects_timers','timer_id','project_id');
+        return $this->belongsTo('App\Models\Projects','project_id');
     }
 
    //public function tasks(){
-   //    return $this->belongsToMany('App\Models\Tasks','tasks_timers',timer_id','task_id');
+   //    return $this->belongsToMany('App\Models\Tasks','tasks_times',timer_id','task_id');
    //}
 }

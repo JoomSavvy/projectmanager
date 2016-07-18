@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\Timers;
+use App\Models\Times;
 use App\Repositories\LocalBaseRepository;
 use InfyOm\Generator\Common\BaseRepository;
 
-class TimersRepository extends LocalBaseRepository
+class TimesRepository extends LocalBaseRepository
 {
     /**
      * @var array
@@ -20,6 +20,6 @@ class TimersRepository extends LocalBaseRepository
      **/
     public function model()
     {
-        return Timers::class;
+        return Times::class;
     }
 }

@@ -5980,17 +5980,6 @@ h2 {
 .odd {
   background: #efefef;
 }
-#zaptodo #project_table thead th,
-table thead th {
-  text-align: center;
-}
-#zaptodo #project_table td,
-table td,
-#zaptodo #project_table th,
-table th {
-  border: 1px solid slategray;
-  padding: 10px;
-}
 #action_buttons,
 #add_project_form {
   margin: 10px;

@@ -6,16 +6,14 @@ angular.module( 'app.project.item', [])
     .controller( 'ProjectItemCtrl',
         function ProjectItemController(
             $scope, $filter, $stateParams,$rootScope,$uibModal,
-            project, users, categories, userSessionService,
-            projectsRestService, tasksRestService, commentsRestService
+            project, users, userSessionService, times,
+            projectsRestService, tasksRestService, commentsRestService, timesRestService
         ) {
             this.users = users;
-            console.log(users);
-            this.categories = categories;
-            //this.user = userSessionService.get();
             this.project = project;
-
             this.user = userSessionService.get();
+            this.times = times;
+
 
             //var unassignedUsers = angular.copy(this.users);
             var unassignedUsers = this.users;
@@ -36,20 +34,36 @@ angular.module( 'app.project.item', [])
                 user_id:this.user.id
             };
 
+            this.newTimeRow = {
+                project_id:this.project.id,
+                user_id:this.user.id
+            };
+
             this.showingNewTaskRow = false;
             this.showingNewCommentRow = false;
+            this.recordingNewTimeRow = false;
+            this.showingNewTimeRow = false;
 
-            this.updateProject = function(){
-                projectsRestService.update({id:this.project.id},this.project).$promise.then(angular.bind(function(result){
-                    //this.project = result;
-                    return angular.noop();
-                }));
+
+            this.startRecordingNewTime = function(){
+                this.newTimeRow.start_at = $filter('date')(new Date().getTime(),'yyyy-MM-dd HH:mm:ss');
+            };
+
+            this.stopRecordingNewTime = function(){
+                this.newTimeRow.end_at = $filter('date')(new Date().getTime(),'yyyy-MM-dd HH:mm:ss');
+                new Date().toISOString();
+                timesRestService.save(this.newTimeRow).$promise.then(angular.bind(this,function(result){
+                    this.project.times.push(result);
+                    this.newTimeRow = {
+                        project_id:this.project.id
+                    }
+                }))
             };
 
             this.updateTask = function(task){
                 task.delivered = this.newTaskDelivered[task.id];
                 tasksRestService.update({id:task.id},task).$promise.then(function(result){
-                    this.newTaskDelivered[task.id]=null;
+                    this.newTaskDelivered[task.id]='';
                 });
             };
 
@@ -136,6 +150,43 @@ angular.module( 'app.project.item', [])
 
             };
 
+            this.openEditTimeRecordModal = function (time) {
+
+                var updateTime = function (time){
+                    timesRestService.update({id:time.id},time).$promise.then(
+                        function(result){
+                            project.times[project.times.indexOf(time)] = result;
+                        }
+                    );
+                };
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'project/item/modals/editTimeRecord.tpl.html',
+                    controller: 'EditTimeRecordModalInstanceCtrl',
+                    controllerAs: 'ETRModalCtrl',
+                    bindToController: true,
+                    size: 'md',
+                    resolve: {
+                        time: angular.bind(this,function () {
+                            return time;
+                        })
+                    }
+                });
+
+                modalInstance.result.then(
+                    //onSuccess
+                    function (time) {
+                        console.log(time);
+                        updateTime(time);
+                    },
+                    //onCancel
+                    function (cancelResult) {
+                        console.log(cancelResult);
+                    }
+                );
+            };
+
             this.removeTaskUser = function (task,user){
                 task.users.splice(task.users.indexOf(user),1);
                 tasksRestService.updateUserDelete({id:task.id},user).$promise.then(
@@ -193,6 +244,115 @@ angular.module( 'app.project.item', [])
         $scope.ok = function () {
             $uibModalInstance.close();
         };
+    })
+    .controller('EditTimeRecordModalInstanceCtrl', function ($scope, $uibModalInstance, $filter,time, timesRestService) {
+        this.time = time;
+        this.editDuration = false;
+
+        this.startDate  = new Date(time.start_at);
+        this.startTime  = new Date(time.start_at);
+        this.endDate    = new Date(time.end_at);
+        this.endTime    = new Date(time.end_at);
+
+        this.duration = new Date(time.start_at).setHours(0,0,0,0);
+
+        this.setDuration = function(){
+            this.time.end_at = $filter('date')(new Date(this.duration).getTime(),'yyyy-MM-dd HH:mm:ss');
+            console.log(this.time.end_at);
+        };
+
+        this.setStartEnd = function(){
+            console.log(this.startDate);
+            console.log(this.startTime);
+            console.log(this.endDate);
+            console.log(this.endTime);
+
+            this.startDate.setHours(this.startTime.getHours());
+            this.startDate.setMinutes(this.startTime.getMinutes());
+            this.startDate.setSeconds(this.startTime.getSeconds());
+
+            this.endDate.setHours(this.endTime.getHours());
+            this.endDate.setMinutes(this.endTime.getMinutes());
+            this.endDate.setSeconds(this.endTime.getSeconds());
+
+
+
+            
+            this.time.start_at = $filter('date')(new Date(this.startDate).getTime(),'yyyy-MM-dd HH:mm:ss');
+            this.time.end_at = $filter('date')(new Date(this.endDate).getTime(),'yyyy-MM-dd HH:mm:ss');
+        };
+
+        this.ok = function () {
+            if(this.editDuration){
+                this.setDuration();
+            }else{
+                this.setStartEnd();
+            }
+            $uibModalInstance.close(this.time);
+        };
+
+        this.resetDates = function(){
+            this.startDate = new Date(time.start_at);
+            this.endDate = new Date(time.end_at);
+        };
+
+        this.resetDates();
+
+        this.clearStartDate = function() {
+            this.startDate = null;
+        };
+
+        this.clearEndDate =function(){
+            this.endDate = null;
+        };
+
+
+        this.inlineOptions = {
+            customClass: getDayClass,
+            showWeeks: true
+        };
+
+        this.popupOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(2020, 5, 22),
+            startingDay: 1
+        };
+
+        this.openDateStartPopup = function() {
+            this.dateStartPopup.opened = true;
+        };
+
+        this.openDateEndPopup = function() {
+            this.dateEndPopup.opened = true;
+        };
+
+        this.dateStartPopup = {
+            opened: false
+        };
+
+        this.dateEndPopup = {
+            opened: false
+        };
+
+        this.events = [];
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date(this.events[i].date).setHours(0,0,0,0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
     })
     ;
     

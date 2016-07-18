@@ -173,7 +173,7 @@ class ProjectsAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Projects $projects */
-        $projects = $this->projectsRepository->with(['tasks','tasks.users','comments','users'])->find($id);
+        $projects = $this->projectsRepository->with(['tasks','tasks.users','comments','users','times'])->find($id);
 
         if (empty($projects)) {
             return Response::json(ResponseUtil::makeError('Projects not found'), 400);

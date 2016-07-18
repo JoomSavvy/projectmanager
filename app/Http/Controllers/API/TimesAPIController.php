@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateTimersAPIRequest;
-use App\Http\Requests\API\UpdateTimersAPIRequest;
-use App\Models\Timers;
-use App\Repositories\TimersRepository;
+use App\Http\Requests\API\CreateTimesAPIRequest;
+use App\Http\Requests\API\UpdateTimesAPIRequest;
+use App\Models\Times;
+use App\Repositories\TimesRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
@@ -13,24 +13,20 @@ use InfyOm\Generator\Utils\ResponseUtil;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 
-use Illuminate\Foundation\Auth\ResetsPasswords;
-
 /**
- * Class TimersController
+ * Class TimesController
  * @package App\Http\Controllers\API
  */
 
-class TimersAPIController extends AppBaseController
+class TimesAPIController extends AppBaseController
 {
-    use ResetsPasswords;
+    /** @var  TimesRepository */
+    private $timesRepository;
 
-    /** @var  TimersRepository */
-    private $timersRepository;
-
-    public function __construct(TimersRepository $timersRepo)
+    public function __construct(TimesRepository $timesRepo)
     {
         $this->middleware('jwt.auth');
-        $this->timersRepository = $timersRepo;
+        $this->timesRepository = $timesRepo;
     }
 
     /**
@@ -38,10 +34,10 @@ class TimersAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/timers",
-     *      summary="Get a listing of the Timers.",
-     *      tags={"Timers"},
-     *      description="Get all Timers",
+     *      path="/times",
+     *      summary="Get a listing of the Times.",
+     *      tags={"Times"},
+     *      description="Get all Times",
      *      produces={"application/json"},
      *      @SWG\Response(
      *          response=200,
@@ -55,7 +51,7 @@ class TimersAPIController extends AppBaseController
      *              @SWG\Property(
      *                  property="data",
      *                  type="array",
-     *                  @SWG\Items(ref="#/definitions/Timers")
+     *                  @SWG\Items(ref="#/definitions/Times")
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -67,29 +63,29 @@ class TimersAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $this->timersRepository->pushCriteria(new RequestCriteria($request));
-        $this->timersRepository->pushCriteria(new LimitOffsetCriteria($request));
-        $timers = $this->timersRepository->all();
+        $this->timesRepository->pushCriteria(new RequestCriteria($request));
+        $this->timesRepository->pushCriteria(new LimitOffsetCriteria($request));
+        $times = $this->timesRepository->all();
 
-        return $this->sendResponse($timers->toArray(), 'Timers retrieved successfully');
+        return $this->sendResponse($times->toArray(), 'Times retrieved successfully');
     }
 
     /**
-     * @param CreateTimersAPIRequest $request
+     * @param CreateTimesAPIRequest $request
      * @return Response
      *
      * @SWG\Post(
-     *      path="/timers",
-     *      summary="Store a newly created Timers in storage",
-     *      tags={"Timers"},
-     *      description="Store Timers",
+     *      path="/times",
+     *      summary="Store a newly created Times in storage",
+     *      tags={"Times"},
+     *      description="Store Times",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Timers that should be stored",
+     *          description="Times that should be stored",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Timers")
+     *          @SWG\Schema(ref="#/definitions/Times")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -102,7 +98,7 @@ class TimersAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Timers"
+     *                  ref="#/definitions/Times"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -112,15 +108,13 @@ class TimersAPIController extends AppBaseController
      *      )
      * )
      */
-    public function store(CreateTimersAPIRequest $request)
+    public function store(CreateTimesAPIRequest $request)
     {
         $input = $request->all();
 
-        $timers = $this->timersRepository->create($input);
+        $times = $this->timesRepository->create($input);
 
-        $this->postEmail($request);
-
-        return $this->sendResponse($timers->toArray(), 'Timers saved successfully');
+        return $this->sendResponse($times->toArray(), 'Times saved successfully');
     }
 
     /**
@@ -128,14 +122,14 @@ class TimersAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Get(
-     *      path="/timers/{id}",
-     *      summary="Display the specified Timers",
-     *      tags={"Timers"},
-     *      description="Get Timers",
+     *      path="/times/{id}",
+     *      summary="Display the specified Times",
+     *      tags={"Times"},
+     *      description="Get Times",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Timers",
+     *          description="id of Times",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -151,7 +145,7 @@ class TimersAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Timers"
+     *                  ref="#/definitions/Times"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -163,30 +157,30 @@ class TimersAPIController extends AppBaseController
      */
     public function show($id)
     {
-        /** @var Timers $timers */
-        $timers = $this->timersRepository->find($id);
+        /** @var Times $times */
+        $times = $this->timesRepository->find($id);
 
-        if (empty($timers)) {
-            return Response::json(ResponseUtil::makeError('Timers not found'), 400);
+        if (empty($times)) {
+            return Response::json(ResponseUtil::makeError('Times not found'), 400);
         }
 
-        return $this->sendResponse($timers->toArray(), 'Timers retrieved successfully');
+        return $this->sendResponse($times->toArray(), 'Times retrieved successfully');
     }
 
     /**
      * @param int $id
-     * @param UpdateTimersAPIRequest $request
+     * @param UpdateTimesAPIRequest $request
      * @return Response
      *
      * @SWG\Put(
-     *      path="/timers/{id}",
-     *      summary="Update the specified Timers in storage",
-     *      tags={"Timers"},
-     *      description="Update Timers",
+     *      path="/times/{id}",
+     *      summary="Update the specified Times in storage",
+     *      tags={"Times"},
+     *      description="Update Times",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Timers",
+     *          description="id of Times",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -194,9 +188,9 @@ class TimersAPIController extends AppBaseController
      *      @SWG\Parameter(
      *          name="body",
      *          in="body",
-     *          description="Timers that should be updated",
+     *          description="Times that should be updated",
      *          required=false,
-     *          @SWG\Schema(ref="#/definitions/Timers")
+     *          @SWG\Schema(ref="#/definitions/Times")
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -209,7 +203,7 @@ class TimersAPIController extends AppBaseController
      *              ),
      *              @SWG\Property(
      *                  property="data",
-     *                  ref="#/definitions/Timers"
+     *                  ref="#/definitions/Times"
      *              ),
      *              @SWG\Property(
      *                  property="message",
@@ -219,20 +213,20 @@ class TimersAPIController extends AppBaseController
      *      )
      * )
      */
-    public function update($id, UpdateTimersAPIRequest $request)
+    public function update($id, UpdateTimesAPIRequest $request)
     {
         $input = $request->all();
 
-        /** @var Timers $timers */
-        $timers = $this->timersRepository->find($id);
+        /** @var Times $times */
+        $times = $this->timesRepository->find($id);
 
-        if (empty($timers)) {
-            return Response::json(ResponseUtil::makeError('Timers not found'), 400);
+        if (empty($times)) {
+            return Response::json(ResponseUtil::makeError('Times not found'), 400);
         }
 
-        $timers = $this->timersRepository->update($input, $id);
+        $times = $this->timesRepository->update($input, $id);
 
-        return $this->sendResponse($timers->toArray(), 'Timers updated successfully');
+        return $this->sendResponse($times->toArray(), 'Times updated successfully');
     }
 
     /**
@@ -240,14 +234,14 @@ class TimersAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Delete(
-     *      path="/timers/{id}",
-     *      summary="Remove the specified Timers from storage",
-     *      tags={"Timers"},
-     *      description="Delete Timers",
+     *      path="/times/{id}",
+     *      summary="Remove the specified Times from storage",
+     *      tags={"Times"},
+     *      description="Delete Times",
      *      produces={"application/json"},
      *      @SWG\Parameter(
      *          name="id",
-     *          description="id of Timers",
+     *          description="id of Times",
      *          type="integer",
      *          required=true,
      *          in="path"
@@ -275,15 +269,15 @@ class TimersAPIController extends AppBaseController
      */
     public function destroy($id)
     {
-        /** @var Timers $timers */
-        $timers = $this->timersRepository->find($id);
+        /** @var Times $times */
+        $times = $this->timesRepository->find($id);
 
-        if (empty($timers)) {
-            return Response::json(ResponseUtil::makeError('Timers not found'), 400);
+        if (empty($times)) {
+            return Response::json(ResponseUtil::makeError('Times not found'), 400);
         }
 
-        $timers->delete();
+        $times->delete();
 
-        return $this->sendResponse($id, 'Timers deleted successfully');
+        return $this->sendResponse($id, 'Times deleted successfully');
     }
 }

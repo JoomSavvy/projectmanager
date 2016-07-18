@@ -72,7 +72,6 @@ class Users extends Model
         "password",
         "isAdmin",
         "remember_token",
-        "created_at",
         "updated_at"
     ];
 

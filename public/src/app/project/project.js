@@ -5,6 +5,7 @@ angular.module( 'app.project', [
     'resources.tasks',
     'resources.comments',
     'resources.files',
+    'resources.times',
     'ui.router'
 ])
 
@@ -54,9 +55,9 @@ angular.module( 'app.project', [
                 users:function(usersRestService){
                     return usersRestService.query().$promise;
                 },
-                categoriesRestService:'categoriesRestService',
-                categories:function(categoriesRestService,$stateParams){
-                    return categoriesRestService.query().$promise;
+                timesRestService:'timesRestService',
+                times:function(timesRestService){
+                    return timesRestService.query().$promise;
                 }
             }
         });

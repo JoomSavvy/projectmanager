@@ -1,4 +1,4 @@
-angular.module('templates-app', ['auth/login/template.tpl.html', 'auth/logout/template.tpl.html', 'auth/setpassword/template.tpl.html', 'config/categories/template.tpl.html', 'project/item/modals/addtaskuser.tpl.html', 'project/item/template.tpl.html', 'project/items/addfile.modals.tpl.html', 'project/items/commentfiles.modals.tpl.html', 'project/items/notesmodal.tpl.html', 'project/items/projectfiles.modals.tpl.html', 'project/items/template.tpl.html', 'user/item/template.tpl.html', 'user/items/template.tpl.html']);
+angular.module('templates-app', ['auth/login/template.tpl.html', 'auth/logout/template.tpl.html', 'auth/setpassword/template.tpl.html', 'config/categories/template.tpl.html', 'project/item/modals/addtaskuser.tpl.html', 'project/item/modals/editTimeRecord.tpl.html', 'project/item/template.tpl.html', 'project/items/addfile.modals.tpl.html', 'project/items/commentfiles.modals.tpl.html', 'project/items/notesmodal.tpl.html', 'project/items/projectfiles.modals.tpl.html', 'project/items/template.tpl.html', 'user/item/template.tpl.html', 'user/items/template.tpl.html']);
 
 angular.module("auth/login/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("auth/login/template.tpl.html",
@@ -198,6 +198,70 @@ angular.module("project/item/modals/addtaskuser.tpl.html", []).run(["$templateCa
     "</div>");
 }]);
 
+angular.module("project/item/modals/editTimeRecord.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("project/item/modals/editTimeRecord.tpl.html",
+    "<div>\n" +
+    "    <div class=\"modal-header\">\n" +
+    "        <h3 class=\"modal-title\">Edit Time Record</h3>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-body\">\n" +
+    "        <div class=\"row\">\n" +
+    "            <div ng-init=\"ETRModalCtrl.editStartEnd=true;ETRModalCtrl.editDuration=false\">\n" +
+    "                <button class=\"btn btn-large btn-primary\" ng-click=\"ETRModalCtrl.editStartEnd=true;ETRModalCtrl.editDuration=false;\">Start/End</button>\n" +
+    "                <button class=\"btn btn-large btn-primary\" ng-click=\"ETRModalCtrl.editStartEnd=false;ETRModalCtrl.editDuration=true;\">Duration</button>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"well well-sm col-md-12\">\n" +
+    "            <div ng-if=\"ETRModalCtrl.editStartEnd\" class=\"panel panel-default\">\n" +
+    "                <div class=\"panel-heading\">Edit Start/End</div>\n" +
+    "                <div class=\"panel-body\">\n" +
+    "                    <div class=\"row\">\n" +
+    "                        <div class=\"col-md-4\">\n" +
+    "                            <h4>Start Date</h4>\n" +
+    "                            <div class=\"input-group\">\n" +
+    "                                <input type=\"text\" class=\"form-control\" uib-datepicker-popup=\"{{ETRModalCtrl.format}}\" popup-placement=\"right\" ng-model=\"ETRModalCtrl.startDate\" is-open=\"ETRModalCtrl.dateStartPopup.opened\" datepicker-options=\"ETRModalCtrl.popupOptions\" ng-required=\"true\" close-text=\"Close\"  />\n" +
+    "                                <span class=\"input-group-btn\">\n" +
+    "                                  <button type=\"button\" class=\"btn btn-default\" ng-click=\"ETRModalCtrl.openDateStartPopup()\"><i class=\" glyphicon glyphicon-calendar\"></i></button>\n" +
+    "                                </span>\n" +
+    "                            </div>\n" +
+    "                        </div>\n" +
+    "                        <div class=\"col-md-4\">\n" +
+    "                            <h4>Start Time</h4>\n" +
+    "                            <uib-timepicker ng-model=\"ETRModalCtrl.startTime\" hour-step=\"1\" show-spinners=\"false\" pad-hours=\"true\" minute-step=\"1\" mousewheel='true' show-meridian=\"true\"></uib-timepicker>\n" +
+    "                        </div>\n" +
+    "                    </div>\n" +
+    "                    <div class=\"row\">\n" +
+    "                        <div class=\"col-md-4\">\n" +
+    "                            <h4>End Date:</h4>\n" +
+    "                            <div class=\"input-group\">\n" +
+    "                                <input type=\"text\" class=\"form-control\" uib-datepicker-popup ng-model=\"ETRModalCtrl.endDate\" popup-placement=\"right\" is-open=\"ETRModalCtrl.dateEndPopup.opened\" datepicker-options=\"ETRModalCtrl.popupOptions\" ng-required=\"true\" close-text=\"Close\" />\n" +
+    "                                <span class=\"input-group-btn\">\n" +
+    "                                  <button type=\"button\" class=\"btn btn-default\" ng-click=\"ETRModalCtrl.openDateEndPopup()\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\n" +
+    "                                </span>\n" +
+    "                            </div>\n" +
+    "\n" +
+    "                        </div>\n" +
+    "                        <div class=\"col-md-4\">\n" +
+    "                        <h4>End Time</h4>\n" +
+    "                        <uib-timepicker ng-model=\"ETRModalCtrl.endTime\" hour-step=\"1\" show-spinners=\"false\" pad-hours=\"true\" minute-step=\"1\" mousewheel='true' show-meridian=\"true\"></uib-timepicker>\n" +
+    "                    </div>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div ng-if=\"ETRModalCtrl.editDuration\" class=\"panel panel-default\">\n" +
+    "                <div class=\"panel-heading\">Edit Duration</div>\n" +
+    "                <div class=\"panel-body\">\n" +
+    "                    <uib-timepicker ng-model=\"ETRModalCtrl.duration\" hour-step=\"1\" show-spinners=\"false\" pad-hours=\"true\" minute-step=\"1\" mousewheel='true' show-meridian=\"false\"></uib-timepicker>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-footer\">\n" +
+    "        <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ETRModalCtrl.ok()\">OK</button>\n" +
+    "    </div>\n" +
+    "</div>");
+}]);
+
 angular.module("project/item/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("project/item/template.tpl.html",
     "<div>\n" +
@@ -205,21 +269,47 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "    <h4>Project Description:</h4>\n" +
     "    <p>{{Ctrl.project.description}}</p>\n" +
     "    <div class=\"row\">\n" +
-    "        <select\n" +
-    "                ng-model=\"Ctrl.project.category_id\"\n" +
-    "                ng-options=\"value.id as value.text for (key, value) in Ctrl.categories\"\n" +
-    "                ng-change=\"Ctrl.updateProject();\">\n" +
-    "            <option value=\"\" disabled selected>Please Select</option>\n" +
-    "        </select>\n" +
+    "        <h4>Time Records</h4>\n" +
+    "        <div id=\"add_timerecord_row_container\">\n" +
+    "            <table ng-if=\"Ctrl.showingNewTimeRow\" id=\"add_project_timeecord_form\">\n" +
+    "                <tbody>\n" +
+    "                <tr >\n" +
+    "                    <td><input placeholder=\"What are you working on?\" type=\"text\" ng-model=\"Ctrl.newTimeRow.description\"/></td>\n" +
+    "                    <td>\n" +
+    "                        <button ng-if=\"!Ctrl.recordingNewTimeRow\" class=\"btn btn-primary\" ng-click=\"Ctrl.recordingNewTimeRow=true;Ctrl.startRecordingNewTime();\">Start</button>\n" +
+    "                        <button ng-if=\"Ctrl.recordingNewTimeRow\" class=\"btn btn-primary\" ng-click=\"Ctrl.recordingNewTimeRow=false;Ctrl.stopRecordingNewTime();\">Stop</button>\n" +
+    "                    </td>\n" +
+    "                </tr>\n" +
+    "                </tbody>\n" +
+    "            </table>\n" +
+    "            <div id=\"action_buttons\">\n" +
+    "                <button class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewTimeRow\" alue=\"Add Task\" ng-click=\"Ctrl.showingNewTimeRow=true\">Add Time</button>\n" +
+    "                <button class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTimeRow\"  ng-click=\"Ctrl.saveNewTimeRow()\">Save</button>\n" +
+    "                <button class=\"btn btn-caution\" ng-if=\"Ctrl.showingNewTimeRow\"  ng-click=\"Ctrl.newTimeRow={project_id:Ctrl.project.id};Ctrl.showingNewTime=false\">Cancel</button>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <table width=\"100%;\" class=\"table table-hover table-condensed table-bordered \">\n" +
+    "            <thead>\n" +
+    "            <th>Task Description</th>\n" +
+    "            <th>Continue</th>\n" +
+    "            <th>Total</th>\n" +
+    "            <th>Time Span</th>\n" +
+    "            <th>Edit</th>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-if=\"Ctrl.project.times.length > 0\" ng-repeat=\"time in Ctrl.project.times\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "                <td>{{time.description}}</td>\n" +
+    "                <td>{{time.user.name }}</td>\n" +
+    "                <td>{{time | timeTotal}}</td>\n" +
+    "                <td>{{time.start_at | dateToISO | date:'h:mma' }} - {{time.end_at | dateToISO | date:'h:mma'}}</td>\n" +
+    "                <td><button class=\"btn btn-xs glyphicon glyphicon-edit\" ng-click=\"Ctrl.openEditTimeRecordModal(time)\"></button> </td>\n" +
+    "            </tr>\n" +
+    "            <tr ng-if=\"!Ctrl.project.times.length > 0\"><td colspan=\"4\"> No Time Records Associated With This Project</td></tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
     "    </div>\n" +
     "    <div class=\"row\">\n" +
-    "        <div class='row'>\n" +
-    "            <h4 class=\"col-sm-12\">\n" +
-    "                Tasks\n" +
-    "                <button class=\"btn btn-primary btn-xs\" ng-if=\"!Ctrl.showingNewTaskRow\"   ng-click=\"Ctrl.showingNewTaskRow=true\">Add Task</button>\n" +
-    "            </h4>\n" +
-    "\n" +
-    "        </div>\n" +
+    "        <h4>Tasks</h4>\n" +
     "        <div ng-if=\"Ctrl.user.isAdmin\" id=\"add_taskrow_container\">\n" +
     "            <table ng-if=\"Ctrl.showingNewTaskRow\" id=\"add_project_form\">\n" +
     "                <thead>\n" +
@@ -240,12 +330,12 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "                </tbody>\n" +
     "            </table>\n" +
     "            <div id=\"action_buttons\">\n" +
-    "\n" +
+    "                <button class=\"btn btn-primary\" ng-if=\"!Ctrl.showingNewTaskRow\" alue=\"Add Task\" ng-click=\"Ctrl.showingNewTaskRow=true\">Add Task</button>\n" +
     "                <button class=\"btn btn-primary\" ng-if=\"Ctrl.showingNewTaskRow\"  ng-click=\"Ctrl.saveNewTaskRow()\">Save</button>\n" +
     "                <button class=\"btn btn-caution\" ng-if=\"Ctrl.showingNewTaskRow\"  ng-click=\"Ctrl.newTaskRow={project_id:Ctrl.project.id};Ctrl.showingNewTask=false\">Cancel</button>\n" +
     "            </div>\n" +
     "        </div>\n" +
-    "        <table width=\"100%;\">\n" +
+    "        <table width=\"100%;\" class=\"table table-hover table-condensed table-bordered \">\n" +
     "            <thead>\n" +
     "            <th>Created On</th>\n" +
     "            <th width=\"60%\">Assigned To</th>\n" +
@@ -278,7 +368,6 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "            <tr ng-if=\"!Ctrl.project.tasks.length > 0\"><td colspan=\"4\"> No Tasks Associated With This Project</td></tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
-    "\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"row\">\n" +
@@ -320,7 +409,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "\n" +
     "        </div>\n" +
     "        <div id=\"add_commentRow_container\">\n" +
-    "            <table ng-if=\"Ctrl.showingNewCommentRow\" id=\"add_comment_form\">\n" +
+    "            <table ng-if=\"Ctrl.showingNewCommentRow\" id=\"add_comment_form\" class=\"table table-hover table-condensed table-bordered \">\n" +
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th>Text</th>\n" +
@@ -339,7 +428,7 @@ angular.module("project/item/template.tpl.html", []).run(["$templateCache", func
     "            </div>\n" +
     "        </div>\n" +
     "\n" +
-    "        <table >\n" +
+    "        <table  class=\"table table-hover table-condensed table-bordered \">\n" +
     "            <thead>\n" +
     "            <tr>\n" +
     "                <th>Created On</th>\n" +
@@ -601,7 +690,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "    </tbody>\n" +
     "</table>\n" +
     "<div id=\"project_tables\" >\n" +
-    "    <table id=\"project_table\" style=\"width:100%\">\n" +
+    "    <table id=\"project_table\" style=\"width:100%\" class=\"table table-hover table-condensed table-bordered table-striped \">\n" +
     "        <thead>\n" +
     "        <tr style=\"border:1px solid gray;background:lightgrey;\">\n" +
     "            <th></th>\n" +
@@ -618,8 +707,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </thead>\n" +
     "        <tbody ui-sortable=\"Ctrl.sortableOptions\" ng-model=\"Ctrl.activeProjects\" class=\"list\">\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'active') || (Ctrl.projectStateFilter == 'all') || (Ctrl.user.isAdmin==0)\"\n" +
-    "            ng-repeat=\"project in Ctrl.activeProjects | filter:{'deleted_at':null}\"\n" +
-    "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "            ng-repeat=\"project in Ctrl.activeProjects | filter:{'deleted_at':null}\">\n" +
     "            <td class=\"myHandle\">\n" +
     "                <i class=\"glyphicon glyphicon-move\"></i>\n" +
     "            </td>\n" +
@@ -657,8 +745,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </tbody>\n" +
     "        <tbody>\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'archived') || (Ctrl.projectStateFilter == 'all')\"\n" +
-    "            ng-repeat=\"project in Ctrl.projects | filter: {'state':'0','deleted_at':null} | orderBy:'order_by'\"\n" +
-    "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "            ng-repeat=\"project in Ctrl.projects | filter: {'state':'0','deleted_at':null} | orderBy:'order_by'\">\n" +
     "            <td><div  style=\"width:15px;height:15px;background:transparent;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +
@@ -680,8 +767,7 @@ angular.module("project/items/template.tpl.html", []).run(["$templateCache", fun
     "        </tbody>\n" +
     "        <tbody>\n" +
     "        <tr ng-if=\"(Ctrl.projectStateFilter == 'trashed') || (Ctrl.projectStateFilter == 'all')\"\n" +
-    "            ng-repeat=\"project in Ctrl.projects | filter: {'deleted_at':''}\"\n" +
-    "            style=\"border:1px solid gray;\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\">\n" +
+    "            ng-repeat=\"project in Ctrl.projects | filter: {'deleted_at':''}\">\n" +
     "            <td><div  style=\"width:15px;height:15px;background:transparent;\"></div></td>\n" +
     "            <td>{{project.created_at}}</td>\n" +
     "            <td><a ui-sref=\"project.item({id:project.id})\">{{project.summary}}</a></td>\n" +

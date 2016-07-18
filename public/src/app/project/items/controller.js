@@ -134,7 +134,6 @@ angular.module( 'app.project.items', [])
             };
 
 
-            
 
             this.saveNewRow = function(){
 
@@ -177,7 +176,11 @@ angular.module( 'app.project.items', [])
                 projectsRestService.query().$promise.then(
                     angular.bind(this,
                         function(projects){
+                            console.log(projects);
                             this.projects = projects;
+
+                            console.log(this.activeProjects);
+                            console.log('ping');
                             this.activeProjects = $filter('filter')(
                                 this.projects,
                                 {
